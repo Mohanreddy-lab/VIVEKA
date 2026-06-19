@@ -5,9 +5,12 @@ Writes the final ranked shortlist in two formats:
   - ranked_output.csv   primary deliverable; organizers' format
   - ranked_output.json  full data for the Streamlit demo
 
+Also prints a rich-formatted leaderboard to the terminal.
+
 Columns written (adapt to exact organizers' spec when dataset arrives):
   rank | candidate_id | final_score | llm_score | confidence |
-  hidden_gem | reason | skill_score | composite_score
+  hidden_gem | reason | skill_score | seniority_score | activity_score |
+  composite_score | embedding_score
 """
 
 import csv
@@ -15,8 +18,18 @@ import json
 from pathlib import Path
 from typing import List, Dict
 
+from config import ID_FIELDS
 
-# Fields to write to CSV — reorder / add columns to match organizers' spec
+try:
+    from rich.console import Console
+    from rich.table import Table
+    from rich.panel import Panel
+    from rich import box as rich_box
+    _RICH = True
+except ImportError:
+    _RICH = False
+
+
 CSV_COLUMNS = [
     "rank",
     "candidate_id",
@@ -26,17 +39,15 @@ CSV_COLUMNS = [
     "hidden_gem",
     "reason",
     "skill_score",
+    "seniority_score",
+    "activity_score",
     "composite_score",
     "embedding_score",
 ]
 
-# Field names the dataset might use for the candidate's ID
-ID_FIELD_CANDIDATES = ["candidate_id", "id", "profile_id", "applicant_id", "email"]
-
 
 def _get_id(candidate: dict) -> str:
-    """Extract the candidate's unique ID, trying common field names."""
-    for field in ID_FIELD_CANDIDATES:
+    for field in ID_FIELDS:
         val = candidate.get(field)
         if val:
             return str(val)
@@ -44,7 +55,6 @@ def _get_id(candidate: dict) -> str:
 
 
 def _to_row(rank: int, candidate: dict) -> dict:
-    """Flatten one candidate into a CSV row dict."""
     return {
         "rank":             rank,
         "candidate_id":     _get_id(candidate),
@@ -54,6 +64,8 @@ def _to_row(rank: int, candidate: dict) -> dict:
         "hidden_gem":       "yes" if candidate.get("hidden_gem") else "no",
         "reason":           candidate.get("reason",         ""),
         "skill_score":      round(float(candidate.get("skill_score",      0.0)), 4),
+        "seniority_score":  round(float(candidate.get("seniority_score",  0.0)), 4),
+        "activity_score":   round(float(candidate.get("activity_score",   0.0)), 4),
         "composite_score":  round(float(candidate.get("composite_score",  0.0)), 4),
         "embedding_score":  round(float(candidate.get("embedding_score",  0.0)), 4),
     }
@@ -65,15 +77,9 @@ def write_output(
     stem: str = "ranked_output",
 ) -> tuple[Path, Path]:
     """
-    Write the ranked shortlist to CSV and JSON.
+    Write ranked shortlist to CSV and JSON.
 
-    Args:
-        ranked:   Sorted list of candidates from Stage 4 (rerank.py).
-        out_dir:  Directory to write into (default: data/).
-        stem:     Base filename without extension.
-
-    Returns:
-        (csv_path, json_path) — paths to the two output files.
+    Returns (csv_path, json_path).
     """
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -83,18 +89,18 @@ def write_output(
 
     rows = [_to_row(rank, c) for rank, c in enumerate(ranked, start=1)]
 
-    # CSV
     with csv_path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_COLUMNS, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
 
-    # JSON (full candidate data, not just the CSV columns)
     enriched = []
     for rank, c in enumerate(ranked, start=1):
         entry = dict(c)
-        entry["rank"] = rank
+        entry["rank"]         = rank
         entry["candidate_id"] = _get_id(c)
+        entry.pop("_id",        None)
+        entry.pop("_rank_jump", None)
         enriched.append(entry)
 
     json_path.write_text(
@@ -107,10 +113,113 @@ def write_output(
     return csv_path, json_path
 
 
+def _conf_color(conf: str) -> str:
+    return {"high": "green", "medium": "yellow", "low": "red"}.get(
+        str(conf).lower(), "white"
+    )
+
+
 def print_summary(ranked: List[Dict], top_n: int = 10) -> None:
-    """Print a quick leaderboard to stdout."""
-    gems   = [c for c in ranked if c.get("hidden_gem")]
-    top    = ranked[:top_n]
+    """Print a leaderboard — uses Rich if available, falls back to plain text."""
+    if _RICH:
+        _print_summary_rich(ranked, top_n)
+    else:
+        _print_summary_plain(ranked, top_n)
+
+
+def _print_summary_rich(ranked: List[Dict], top_n: int) -> None:
+    console = Console()
+    gems    = [c for c in ranked if c.get("hidden_gem")]
+    top     = ranked[:top_n]
+
+    table = Table(
+        title=f"MANTHAN — Final Shortlist  ({len(ranked)} candidates ranked)",
+        box=rich_box.ROUNDED,
+        show_header=True,
+        header_style="bold cyan",
+        border_style="cyan",
+        highlight=True,
+    )
+    table.add_column("#",           style="dim",     width=4,  justify="right")
+    table.add_column("ID",                           width=14)
+    table.add_column("Title",                        width=26)
+    table.add_column("Score",       justify="right", width=7)
+    table.add_column("LLM",         justify="right", width=5)
+    table.add_column("Conf",        justify="center",width=8)
+    table.add_column("Skill",       justify="right", width=6)
+    table.add_column("Gem",         justify="center",width=4)
+    table.add_column("Reason",                       min_width=40)
+
+    for i, c in enumerate(top, 1):
+        is_gem = c.get("hidden_gem", False)
+        conf   = str(c.get("confidence", "—")).lower()
+        score  = c.get("final_score", 0.0)
+        row_style = "bold yellow" if is_gem else ("bold" if i <= 3 else "")
+
+        table.add_row(
+            str(i),
+            _get_id(c)[:13],
+            c.get("title", "")[:25],
+            f"{score:.3f}",
+            str(c.get("llm_score", "—")),
+            f"[{_conf_color(conf)}]{conf[:6]}[/]",
+            f"{c.get('skill_score', 0):.0%}",
+            "★" if is_gem else "",
+            c.get("reason", "")[:80],
+            style=row_style,
+        )
+
+    console.print()
+    console.print(table)
+    console.print()
+    _print_score_breakdown_rich(console, top[:5])
+
+    if gems:
+        gem_lines = "\n".join(
+            f"  [bold yellow]★[/] [{_get_id(c)}] {c.get('title', '')} "
+            f"— {c.get('reason', '')[:70]}"
+            for c in gems
+        )
+        console.print(
+            Panel(
+                gem_lines,
+                title=f"[bold yellow]★ Hidden Gems  ({len(gems)} found)[/]",
+                border_style="yellow",
+            )
+        )
+        console.print()
+
+
+def _print_score_breakdown_rich(console, top5: List[Dict]) -> None:
+    if not top5:
+        return
+    t = Table(
+        title="Score Breakdown — Top 5",
+        box=rich_box.SIMPLE,
+        header_style="bold",
+    )
+    t.add_column("ID",          width=14)
+    t.add_column("Embed",       justify="right", width=7)
+    t.add_column("Skill",       justify="right", width=7)
+    t.add_column("Seniority",   justify="right", width=10)
+    t.add_column("Activity",    justify="right", width=9)
+    t.add_column(">> Composite", justify="right", width=12)
+
+    for c in top5:
+        t.add_row(
+            _get_id(c)[:13],
+            f"{c.get('embedding_score', 0):.3f}",
+            f"{c.get('skill_score',     0):.3f}",
+            f"{c.get('seniority_score', 0):.3f}",
+            f"{c.get('activity_score',  0):.3f}",
+            f"[bold]{c.get('composite_score', 0):.3f}[/]",
+        )
+    console.print(t)
+
+
+def _print_summary_plain(ranked: List[Dict], top_n: int) -> None:
+    gems = [c for c in ranked if c.get("hidden_gem")]
+    top  = ranked[:top_n]
 
     print(f"\n{'='*70}")
     print(f"  MANTHAN — Final Shortlist  ({len(ranked)} candidates ranked)")
@@ -133,8 +242,15 @@ def print_summary(ranked: List[Dict], top_n: int = 10) -> None:
     print(f"{'='*70}\n")
 
 
+def normalize_scores(ranked: List[Dict]) -> List[Dict]:
+    """Add score_100 = final_score * 100 to each candidate (in-place)."""
+    for c in ranked:
+        c["score_100"] = round(c.get("final_score", 0.0) * 100, 1)
+    return ranked
+
+
 # ---------------------------------------------------------------------------
-# Smoke test — run with: python src/output.py
+# Smoke test
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
@@ -146,20 +262,23 @@ if __name__ == "__main__":
             "id": "C001", "title": "Senior Data Engineer",
             "final_score": 0.838, "llm_score": 9, "confidence": "high",
             "hidden_gem": False, "reason": "8 years on AWS Spark pipelines; direct match.",
-            "skill_score": 0.75, "composite_score": 0.727, "embedding_score": 0.91,
+            "skill_score": 0.75, "seniority_score": 1.0, "activity_score": 0.80,
+            "composite_score": 0.727, "embedding_score": 0.91,
         },
         {
             "id": "C004", "title": "Data Engineer",
             "final_score": 0.682, "llm_score": 7, "confidence": "medium",
             "hidden_gem": True,
             "reason": "Limited evidence: self-taught, no degree, but ships Spark + Airflow on AWS.",
-            "skill_score": 0.50, "composite_score": 0.614, "embedding_score": 0.78,
+            "skill_score": 0.50, "seniority_score": 0.55, "activity_score": 0.0,
+            "composite_score": 0.614, "embedding_score": 0.78,
         },
         {
             "id": "C003", "title": "Data Analyst",
             "final_score": 0.418, "llm_score": 4, "confidence": "low",
             "hidden_gem": False, "reason": "Limited evidence: no pipeline experience stated.",
-            "skill_score": 0.25, "composite_score": 0.435, "embedding_score": 0.62,
+            "skill_score": 0.25, "seniority_score": 0.55, "activity_score": 0.0,
+            "composite_score": 0.435, "embedding_score": 0.62,
         },
     ]
 

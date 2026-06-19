@@ -17,6 +17,18 @@ pandas
 
 # UI
 streamlit
+plotly
+
+# Terminal output
+rich
+
+# REST API
+fastapi
+uvicorn[standard]
+
+# Testing
+pytest
+httpx
 
 # Utilities
 python-dotenv

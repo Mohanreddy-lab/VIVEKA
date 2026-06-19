@@ -20,7 +20,7 @@ PARSED_JD = {
 
 
 class TestSkillMatch:
-    """The single most important function to test: boundary matching."""
+    """The single most important function: synonym-aware word-boundary matching."""
 
     def test_exact_match(self):
         assert _skill_match("Python", "strong python background")
@@ -29,15 +29,16 @@ class TestSkillMatch:
         assert _skill_match("SQL", "expert in sql and data modeling")
 
     def test_sql_does_not_match_nosql(self):
-        # The original bug — verify it's fixed
         assert not _skill_match("SQL", "nosql expert")
 
     def test_sql_matches_in_context(self):
         assert _skill_match("SQL", "sql, python, and tableau")
 
-    def test_partial_name_matches(self):
-        # "Spark" should match "Apache Spark"
+    def test_synonym_spark_matches_apache_spark(self):
         assert _skill_match("Spark", "experience with apache spark at scale")
+
+    def test_pyspark_matches_apache_spark(self):
+        assert _skill_match("Apache Spark", "pyspark developer")
 
     def test_csharp_special_chars(self):
         assert _skill_match("C#", "built services in c# and .net")
@@ -49,7 +50,6 @@ class TestSkillMatch:
         assert _skill_match("C++", "wrote low-latency c++ code")
 
     def test_r_language_no_false_positive(self):
-        # "R" should not match "React" or "REST"
         assert not _skill_match("R", "react and rest api experience")
 
     def test_r_language_matches_alone(self):
@@ -79,12 +79,15 @@ class TestSkillScore:
         assert score == 0.0
 
     def test_required_skills_weighted_higher_than_implied(self):
-        # Candidate matching only required vs only implied
         c_required = {"skills": ["Python"]}   # 1 required skill
         c_implied  = {"skills": ["Git"]}       # 1 implied skill
         s_req = _skill_score(c_required, PARSED_JD)
         s_imp = _skill_score(c_implied,  PARSED_JD)
         assert s_req > s_imp
+
+    def test_returns_float(self):
+        score = _skill_score({"skills": ["Python"]}, PARSED_JD)
+        assert isinstance(score, float)
 
 
 class TestActivityScore:
@@ -107,9 +110,8 @@ class TestActivityScore:
         assert 0.0 < score <= 1.0
 
     def test_multiple_signals_averaged(self):
-        score_both   = _activity_score({"github_repos": 30, "endorsements": 20})
-        score_repos  = _activity_score({"github_repos": 30})
-        # Both signals at max → same as one signal at max
+        score_both  = _activity_score({"github_repos": 30, "endorsements": 20})
+        score_repos = _activity_score({"github_repos": 30})
         assert score_both == score_repos == 1.0
 
 
@@ -120,6 +122,10 @@ class TestIsHiddenGem:
 
     def test_high_score_senior_title_not_gem(self):
         candidate = {"title": "Senior Data Engineer", "skills": ["A", "B", "C", "D", "E"]}
+        assert not _is_hidden_gem(candidate, composite=0.70, skill=0.60)
+
+    def test_lead_title_not_gem(self):
+        candidate = {"title": "Lead Data Engineer"}
         assert not _is_hidden_gem(candidate, composite=0.70, skill=0.60)
 
     def test_low_composite_not_gem(self):
@@ -154,8 +160,17 @@ class TestScoreCandidates:
         for c in results:
             assert "composite_score" in c
             assert "skill_score" in c
+            assert "seniority_score" in c
             assert "activity_score" in c
             assert "hidden_gem" in c
+            assert "skill_evidence" in c
+
+    def test_skill_evidence_has_matched_and_missing(self):
+        results = score_candidates(self.CANDIDATES, PARSED_JD)
+        for c in results:
+            ev = c["skill_evidence"]
+            assert "required_matched" in ev
+            assert "required_missing" in ev
 
     def test_top_n_respected(self):
         results = score_candidates(self.CANDIDATES, PARSED_JD, top_n=2)
@@ -168,3 +183,8 @@ class TestScoreCandidates:
     def test_worst_candidate_ranks_last(self):
         results = score_candidates(self.CANDIDATES, PARSED_JD, top_n=3)
         assert results[-1]["id"] == "C2"
+
+    def test_rank_jump_key_present(self):
+        results = score_candidates(self.CANDIDATES, PARSED_JD)
+        for c in results:
+            assert "_rank_jump" in c
