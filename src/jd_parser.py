@@ -12,20 +12,20 @@ Runs fully offline — no API key, no internet required.
 """
 
 import json
-import re
 import sys
 import os
 
-# Allow running as `python src/jd_parser.py` from the project root
 sys.path.insert(0, os.path.dirname(__file__))
 
 from llm import get_llm
+from utils import safe_parse_json, as_list
 from langchain_core.prompts import ChatPromptTemplate
 
 # ---------------------------------------------------------------------------
 # Prompts
-# Local models need shorter, more explicit instructions than GPT-4o.
-# We end the user turn with "JSON:" to steer the model straight into output.
+# Local models need shorter, more explicit instructions than cloud models.
+# Ending the user turn with "JSON:" steers the model straight into output.
+# Double braces {{ }} are LangChain template escapes that render as { }.
 # ---------------------------------------------------------------------------
 
 SYSTEM_PROMPT = """You are a senior technical recruiter. Analyze job descriptions and extract structured data.
@@ -36,7 +36,9 @@ The JSON must have exactly these four keys:
   "implied_skills"   - array of skills not stated but obviously needed (e.g. Git for any dev role)
   "seniority"        - exactly one string: "junior", "mid", or "senior"
   "latent_needs"     - array of short phrases describing what this role truly tests
-                       (e.g. "works under ambiguity", "owns outcomes end-to-end")
+
+Example output format (use this exact structure):
+{{"required_skills": ["Python", "Apache Spark", "SQL"], "implied_skills": ["Git", "Linux", "Docker"], "seniority": "senior", "latent_needs": ["owns outcomes end-to-end", "works under ambiguity"]}}
 
 Start your response with {{ and end with }}. Nothing before or after the JSON."""
 
@@ -54,77 +56,29 @@ def parse_jd(jd_text: str) -> dict:
     """
     Parse a job description and return a structured dict.
 
-    Args:
-        jd_text: Raw job description as plain text.
-
-    Returns:
-        dict with keys: required_skills, implied_skills, seniority, latent_needs.
-        All keys are always present — empty lists / "unknown" on failure.
+    Returns dict with keys: required_skills, implied_skills, seniority, latent_needs.
+    All keys are always present — empty lists / "unknown" on parse failure.
     """
     llm = get_llm()
-
     prompt = ChatPromptTemplate.from_messages([
         ("system", SYSTEM_PROMPT),
-        ("human", USER_TEMPLATE),
+        ("human",  USER_TEMPLATE),
     ])
-
     chain = prompt | llm
     response = chain.invoke({"jd_text": jd_text.strip()})
 
-    return _safe_parse(response.content)
+    fallback = {"required_skills": [], "implied_skills": [], "seniority": "unknown", "latent_needs": []}
+    data = safe_parse_json(response.content, fallback)
 
-
-# ---------------------------------------------------------------------------
-# Internal helpers
-# ---------------------------------------------------------------------------
-
-def _safe_parse(raw: str) -> dict:
-    """
-    Parse LLM output to a dict, with multiple fallback strategies.
-
-    Local models sometimes wrap JSON in prose or markdown fences.
-    We try progressively looser extraction until something parses.
-    """
-    # 1. Strip markdown code fences if the model added them
-    cleaned = re.sub(r"```(?:json)?", "", raw).strip().rstrip("`").strip()
-
-    # 2. Try parsing the whole response directly
-    data = _try_json(cleaned)
-
-    # 3. If that fails, find the first {...} block in the text
-    if data is None:
-        match = re.search(r"\{.*\}", cleaned, re.DOTALL)
-        if match:
-            data = _try_json(match.group())
-
-    # 4. Still nothing — return safe defaults so the pipeline keeps running
-    if data is None:
-        print(f"[jd_parser] Warning: could not parse LLM output. Raw:\n{raw[:300]}")
-        data = {}
+    if data is fallback:
+        print(f"[jd_parser] Warning: could not parse LLM output. Raw:\n{response.content[:300]}")
 
     return {
-        "required_skills": _as_list(data.get("required_skills")),
-        "implied_skills":  _as_list(data.get("implied_skills")),
+        "required_skills": as_list(data.get("required_skills")),
+        "implied_skills":  as_list(data.get("implied_skills")),
         "seniority":       str(data.get("seniority", "unknown")).lower(),
-        "latent_needs":    _as_list(data.get("latent_needs")),
+        "latent_needs":    as_list(data.get("latent_needs")),
     }
-
-
-def _try_json(text: str):
-    """Return parsed dict if text is valid JSON, else None."""
-    try:
-        return json.loads(text)
-    except (json.JSONDecodeError, TypeError):
-        return None
-
-
-def _as_list(value) -> list:
-    """Coerce a value to a list — returns [] for None or unexpected types."""
-    if isinstance(value, list):
-        return value
-    if isinstance(value, str) and value.strip():
-        return [value]
-    return []
 
 
 # ---------------------------------------------------------------------------

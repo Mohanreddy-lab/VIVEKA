@@ -7,9 +7,16 @@ venv/
 .venv/
 *.egg-info/
 
-# Data (never commit dataset files)
+# Data — never commit candidate dataset or pipeline output
 data/*
 !data/.gitkeep
+!data/job_description.txt   # sample JD is safe to commit
+
+# HuggingFace / sentence-transformers model cache
+.cache/
+
+# Streamlit
+.streamlit/secrets.toml
 
 # Secrets
 .env
