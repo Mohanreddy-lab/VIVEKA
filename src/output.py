@@ -102,8 +102,8 @@ def write_output(
         encoding="utf-8",
     )
 
-    print(f"[output] Wrote {len(rows)} candidates → {csv_path}")
-    print(f"[output] Wrote full data   → {json_path}")
+    print(f"[output] Wrote {len(rows)} candidates -> {csv_path}")
+    print(f"[output] Wrote full data   -> {json_path}")
     return csv_path, json_path
 
 
