@@ -1,0 +1,23 @@
+# Local LLM (default — free, offline, private)
+langchain
+langchain-ollama
+langchain-community
+
+# Optional cloud fallback
+langchain-google-genai
+
+# Embeddings + vector search (all local)
+sentence-transformers
+faiss-cpu
+
+# Scoring
+scikit-learn
+numpy
+pandas
+
+# UI
+streamlit
+
+# Utilities
+python-dotenv
+tqdm
