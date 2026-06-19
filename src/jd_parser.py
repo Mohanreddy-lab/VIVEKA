@@ -20,7 +20,7 @@ import os
 sys.path.insert(0, os.path.dirname(__file__))
 
 from llm import get_llm
-from langchain.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 
 # ---------------------------------------------------------------------------
 # Prompts
@@ -38,7 +38,7 @@ The JSON must have exactly these four keys:
   "latent_needs"     - array of short phrases describing what this role truly tests
                        (e.g. "works under ambiguity", "owns outcomes end-to-end")
 
-Start your response with { and end with }. Nothing before or after the JSON."""
+Start your response with {{ and end with }}. Nothing before or after the JSON."""
 
 USER_TEMPLATE = """Job Description:
 {jd_text}
