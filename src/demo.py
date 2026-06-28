@@ -56,8 +56,13 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+_provider = os.getenv("LLM_PROVIDER", "ollama").lower()
+
 st.title("🔍 VIVEKA — Discerning True Talent from Noise")
-st.caption("Offline · Free · Private · Powered by Ollama locally")
+if _provider == "gemini":
+    st.caption("Cloud Demo · Powered by Gemini · Free tier")
+else:
+    st.caption("Offline · Free · Private · Powered by Ollama locally")
 
 # ---------------------------------------------------------------------------
 # Sidebar — settings
@@ -66,12 +71,15 @@ st.caption("Offline · Free · Private · Powered by Ollama locally")
 with st.sidebar:
     st.header("⚙️ Settings")
 
-    model_name = st.text_input(
-        "Ollama model",
-        value=os.getenv("VIVEKA_MODEL", "llama3.2"),
-        help="Must be pulled: `ollama pull llama3.2`",
-    )
-    os.environ["VIVEKA_MODEL"] = model_name
+    if _provider == "gemini":
+        st.info("☁️ Cloud mode — using Gemini API")
+    else:
+        model_name = st.text_input(
+            "Ollama model",
+            value=os.getenv("VIVEKA_MODEL", "llama3.2"),
+            help="Must be pulled: `ollama pull llama3.2`",
+        )
+        os.environ["VIVEKA_MODEL"] = model_name
 
     rerank_n = st.slider(
         "Candidates to rerank (LLM calls)",
@@ -144,20 +152,21 @@ with st.sidebar:
     )
     os.environ["VIVEKA_AUDIT"] = "on" if audit_on else "off"
 
-    st.divider()
-    if st.button("🔍 Check Ollama connection"):
-        from llm import check_ollama
-        ok, msg = check_ollama()
-        if ok:
-            st.success(msg)
-        else:
-            st.error(msg)
-            st.code("ollama serve", language="bash")
+    if _provider == "ollama":
+        st.divider()
+        if st.button("🔍 Check Ollama connection"):
+            from llm import check_ollama
+            ok, msg = check_ollama()
+            if ok:
+                st.success(msg)
+            else:
+                st.error(msg)
+                st.code("ollama serve", language="bash")
 
-    st.divider()
-    st.markdown("**Switch model:**  `ollama pull mistral:7b`")
-    st.markdown("**Fast model:**    `ollama pull llama3.2`")
-    st.markdown("**Stop server:**   `Ctrl+C` in terminal")
+        st.divider()
+        st.markdown("**Switch model:**  `ollama pull mistral:7b`")
+        st.markdown("**Fast model:**    `ollama pull llama3.2`")
+        st.markdown("**Stop server:**   `Ctrl+C` in terminal")
 
 # ---------------------------------------------------------------------------
 # Candidate data source
@@ -673,15 +682,16 @@ if run_btn:
         st.error("Job description is too short. Please paste the full text (at least 30 characters).")
         st.stop()
 
-    # ── Ollama health check ────────────────────────────────────────────────────
-    from llm import check_ollama
-    with st.spinner("Checking Ollama…"):
-        _ollama_ok, _ollama_msg = check_ollama()
-    if not _ollama_ok:
-        st.error(f"Cannot reach Ollama: {_ollama_msg}")
-        st.info("Fix: open a new terminal and run `ollama serve`, then click Run again.")
-        st.code("ollama serve", language="bash")
-        st.stop()
+    # ── Ollama health check (skip in Gemini/cloud mode) ───────────────────────
+    if _provider == "ollama":
+        from llm import check_ollama
+        with st.spinner("Checking Ollama…"):
+            _ollama_ok, _ollama_msg = check_ollama()
+        if not _ollama_ok:
+            st.error(f"Cannot reach Ollama: {_ollama_msg}")
+            st.info("Fix: open a new terminal and run `ollama serve`, then click Run again.")
+            st.code("ollama serve", language="bash")
+            st.stop()
 
     # ── Stage 1–3 ─────────────────────────────────────────────────────────────
     t0 = time.time()
