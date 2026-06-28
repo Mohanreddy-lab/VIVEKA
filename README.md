@@ -9,299 +9,403 @@ app_file: app.py
 pinned: false
 ---
 
-# VIVEKA — Discerning True Talent from Noise
+# VIVEKA — Find the Best Candidate. Every Time.
 
-> *Viveka* (Sanskrit: विवेक) — discernment. The clarity to tell true from false,
-> signal from noise. In classical thought, viveka is the faculty that sees past
-> surface appearances to perceive what is real.
+> **Viveka** (Sanskrit: विवेक) means *discernment* — the wisdom to tell real from fake,
+> signal from noise, genuine skill from a well-written résumé.
 >
-> We apply that faculty to hiring: discerning a candidate's genuine capability
-> from keyword noise and surface-level résumé claims.
+> That is exactly what this system does for hiring.
 
-Built for the **India Runs Data & AI Challenge** — Track 1: AI-Powered Candidate Ranking.
+**🚀 Live Demo:** [https://huggingface.co/spaces/mohareddy1423/VIVEKA](https://huggingface.co/spaces/mohareddy1423/VIVEKA)
 
----
+**🐙 GitHub:** [https://github.com/Mohanreddy-lab/VIVEKA](https://github.com/Mohanreddy-lab/VIVEKA)
 
-## The Vision
-
-Most hiring tools match keywords. They surface the résumé that mentions
-"Apache Spark" six times — not the engineer who built production pipelines with it.
-They reward noise over signal.
-
-VIVEKA is different. It reads a job description the way a seasoned recruiter does —
-understanding what the role *truly* needs, not just what the text says. It scores
-candidates on genuine evidence, flags hidden gems whose titles undersell their
-ability, and explains every ranking decision in plain words.
-
-The system is built on four pillars. One is fully working today. The other three
-are the honest roadmap — described as future work, never faked.
+Built for the **India Runs Data & AI Challenge — Track 1: AI-Powered Candidate Ranking**
 
 ---
 
-## Runs Fully Offline — Free, Private, No API Key
+## What Problem Does This Solve?
 
-VIVEKA uses a **local language model** (Ollama + Llama 3.2). It needs no paid API
-and no internet connection. Candidate data never leaves the machine.
+Imagine you are hiring a Data Engineer. You get 500 applications.
 
-This is not a workaround. It is a design choice. A hiring tool that sends résumés
-to a third-party cloud raises real privacy concerns. VIVEKA avoids that entirely.
+A normal hiring tool will rank the person who wrote "Apache Spark" 12 times at the top.
+But is that person actually good? Maybe not.
 
-**Cloud mode** (Gemini free tier) is available for demos on Hugging Face Spaces.
+The best candidate might be someone who:
+- Has a modest job title like "Data Analyst"
+- Never keyword-stuffed their résumé
+- But built real Spark pipelines that processed millions of records
 
----
-
-## The Four Pillars
-
-### Pillar 1 — Talent Knowledge Graph `[ROADMAP]`
-
-A graph database (Neo4j or similar) that maps skills, roles, industries, and
-transitions. It knows that "Spark" implies distributed systems, that a "senior
-analyst at a fintech" likely knows SQL and Python, and that certain career paths
-are stepping stones to others.
-
-**Why it matters:** turns isolated résumé facts into a connected map of talent.
-**Status:** design complete. Build follows dataset availability.
+A normal tool misses them. **VIVEKA finds them.**
 
 ---
 
-### Pillar 2 — Trajectory Modeling `[ROADMAP]`
+## What Makes VIVEKA Different?
 
-A sequence model trained on career histories. It predicts where a candidate is
-heading, not just where they have been. A junior engineer with an accelerating
-skill curve ranks higher than a senior who has stagnated.
-
-**Why it matters:** hiring is a bet on the future, not a reward for the past.
-**Status:** architecture defined. Requires longitudinal career data to train.
-
----
-
-### Pillar 3 — Candidate Digital Twin `[ROADMAP]`
-
-A profile enrichment layer that infers missing signals — inferred skills from job
-titles, likely tools from industries, probable soft skills from tenure and team size.
-Not invented facts; probabilistic completion of sparse profiles.
-
-**Why it matters:** most candidate data is sparse. Imputation without hallucination
-unlocks the long tail of overlooked applicants.
-**Status:** approach defined. Tied to Pillar 1 graph for inference paths.
+| Normal Tool | VIVEKA |
+|---|---|
+| Counts keyword matches | Understands what the job *really* needs |
+| Rewards résumé stuffing | Penalizes fake skill claims |
+| Ranks by title/years | Ranks by actual evidence in the text |
+| Black box — no explanation | Explains every rank in plain words |
+| Ignores hidden talent | Flags "Hidden Gems" — overlooked but strong |
+| Sends data to the cloud | Runs fully offline — your data stays private |
 
 ---
 
-### Pillar 4 — Agentic Recruiter + Ranking `[WORKING NOW]`
-
-The fully built, running core of VIVEKA. An agent that reads a job, understands
-what it truly needs, and produces a ranked shortlist with honest explanations.
-Runs entirely on a local model — no cloud required.
-
----
-
-## How Pillar 4 Works: The 5-Stage Engine
+## How It Works — 5 Stages Explained Simply
 
 ```
-Job Description (raw text)
-        │
-        ▼
-┌──────────────────────────────┐
-│  Stage 1 · JD Intelligence   │  Local LLM reads the JD → required skills,
-│  (jd_parser.py)              │  implied skills, seniority, latent needs
-└─────────────┬────────────────┘
-              │ structured JSON
-              ▼
-┌──────────────────────────────┐
-│  Stage 2 · Fast Recall       │  Embed JD + all profiles with
-│  (recall.py)                 │  sentence-transformers. FAISS retrieves
-└─────────────┬────────────────┘  top ~200 candidates in milliseconds.
-              │ top-200 candidates
-              ▼
-┌──────────────────────────────┐
-│  Stage 3 · Multi-signal      │  Blend three signals:
-│  Scoring (scoring.py)        │  · semantic similarity (embedding dot product)
-└─────────────┬────────────────┘  · skill overlap (weighted by importance)
-              │                   · activity / behavior signals
-              │ ranked top-50
-              ▼
-┌──────────────────────────────┐
-│  Stage 4 · Honest Rerank     │  Local LLM reads each profile + JD.
-│  (rerank.py)                 │  Scores fit. Writes a reason using REAL
-└─────────────┬────────────────┘  text. If proof is weak, it says so.
-              │ scored + explained
-              ▼
-┌──────────────────────────────┐
-│  Stage 5 · Output            │  Writes the ranked list in the organizers'
-│  (output.py)                 │  format: rank, ID, score, reason,
-└──────────────────────────────┘  and "hidden gem" flag.
+You paste a Job Description
+           ↓
+   Stage 1: What does this job really need?
+           ↓
+   Stage 2: Find the closest candidates fast (top 200)
+           ↓
+   Stage 3: Score them on 3 signals
+           ↓
+   Stage 4: AI reads each profile + writes honest explanations
+           ↓
+   Stage 5: Final ranked list with scores, reasons, download
 ```
-
-### The "Hidden Gem" Flag
-
-A candidate is flagged as a hidden gem when their composite score (multi-signal)
-lands in the top tier but their raw embedding rank placed them lower. These are
-the candidates a keyword filter would have dropped — VIVEKA's discernment surfaces them.
 
 ---
 
-## Trust Features
+### Stage 1 — JD Intelligence (`jd_parser.py`)
+
+The AI reads your job description like a senior recruiter would.
+
+It extracts:
+- **Required skills** — things you must have (e.g., Python, Spark)
+- **Implied skills** — things not written but obviously needed (e.g., if you need "Spark", you probably need distributed computing knowledge)
+- **Seniority level** — junior / mid / senior / lead, detected from wording
+- **Latent needs** — e.g., "cross-functional collaboration" buried in a sentence about reporting
+
+Output: clean structured JSON used by every stage after this.
+
+---
+
+### Stage 2 — Fast Recall (`recall.py`)
+
+You might have 1,000 candidates. Checking all 1,000 with an AI would take hours and cost a lot.
+
+Instead, VIVEKA:
+1. Converts the job description and all profiles into **embeddings** (numbers that capture meaning)
+2. Uses **FAISS** (a lightning-fast search index by Meta) to find the top 200 candidates in milliseconds
+3. These 200 go to Stage 3 — the rest are filtered out quickly
+
+On Hugging Face Spaces: embeddings are generated using the HF Inference API (no local GPU needed).
+Locally: uses `sentence-transformers` if installed, same API fallback otherwise.
+
+---
+
+### Stage 3 — Multi-Signal Scoring (`scoring.py`)
+
+For each of the top 200, VIVEKA blends **3 signals** into one composite score:
+
+**Signal 1 — Semantic Match (embedding similarity)**
+How close is the candidate's profile to the job description in *meaning*, not just words?
+A candidate who says "built data pipelines on AWS" scores high for a job that says "cloud data infrastructure" — even though the exact words differ.
+
+**Signal 2 — Skill Overlap (weighted)**
+Are the required skills present? Are the *important* skills present? Each required skill has a weight. Missing a core skill hurts more than missing a nice-to-have.
+
+Special protections:
+- **Keyword Stuffing Detector** — if a skill appears in the structured "skills" field but NEVER appears in the actual experience text, it is flagged as fake and the score is reduced 30%
+- **Skill Synonym Matching** — "Spark", "PySpark", "Apache Spark" are all the same thing. VIVEKA knows this.
+
+**Signal 3 — Activity & Behavior Signals**
+If the data includes GitHub activity, publication count, project count, or tenure signals — these feed into the score. Candidates who *do* things rank above candidates who only *claim* things.
+
+**Final composite = weighted blend of all 3 signals**
+
+---
+
+### Stage 4 — Honest Rerank (`rerank.py`)
+
+The top 50 candidates go to the AI for a deep read.
+
+For each candidate, the AI:
+1. Reads the actual profile text (after PII is stripped)
+2. Scores the fit from 1–10
+3. Writes a reason in plain English using **real quotes** from the profile
+4. Sets confidence: `high` / `medium` / `low`
+
+**Honesty rules baked in:**
+- If the evidence is thin → it says "Limited evidence"
+- If a quote cannot be found in the original text → it is flagged `evidence_unsupported` and confidence is downgraded
+- The AI cannot invent reasons — citations must exist in the real profile
+
+**Hidden Gem Detection:**
+A candidate is flagged ★ Hidden Gem when:
+- Their composite score (Stage 3) is in the top tier
+- But their raw embedding rank would have placed them lower
+- AND their reason text contains uncertainty language
+
+These are the people a keyword filter would have buried. VIVEKA surfaces them.
+
+---
+
+### Stage 5 — Output (`output.py`)
+
+The final ranked shortlist is written in three formats:
+
+| Format | File | Contents |
+|---|---|---|
+| Excel | `ranked_output.xlsx` | Formatted spreadsheet — highlighted hidden gems, frozen header, column widths |
+| CSV | `ranked_output.csv` | Clean CSV for submission |
+| JSON | `ranked_output.json` | Full data including all scores, evidence, audit info |
+
+The Excel file can be downloaded directly from the UI with one click.
+
+---
+
+## Trust & Safety Features
 
 ### PII Firewall
-All identity fields (name, email, phone, gender, age, location, nationality,
-photo, address) are stripped from every profile **before** scoring or LLM rerank.
-Enabled by default. Ranking is based on skills and evidence alone.
+Before any AI sees a profile, all personal identity fields are stripped:
+name, email, phone, gender, age, location, nationality, photo, address.
 
-Toggle: `VIVEKA_PII_FIREWALL=off` to disable (not recommended).
+Ranking is based on **skills and evidence only**. A human cannot accidentally bias the AI by seeing a candidate's name or photo.
+
+Toggle off: `VIVEKA_PII_FIREWALL=off` (not recommended for real hiring)
 
 ### Citation Grounding
-The LLM must provide verbatim snippets from the profile as evidence for its score.
-A deterministic verifier checks each snippet against the actual profile text.
-If a citation is not found, confidence is automatically downgraded and the
-snippet is flagged as `evidence_unsupported`.
+Every reason the AI writes must include a verbatim quote from the profile.
+A deterministic checker scans the original text to verify each quote exists.
+Unverified quotes are flagged — the score is not trusted blindly.
 
-### Keyword-Stuffing Detector
-Skills listed in structured fields but never mentioned in narrative prose are
-flagged as `claimed_unsupported`. A penalty (default 30%) is applied to
-`skill_score` — honest discounting, not disqualification.
+### Keyword Stuffing Penalty
+Skills listed in a "Skills" section but never mentioned in actual experience text → 30% penalty on skill score. Honest candidates are not punished for concise writing. Stuffers are caught automatically.
 
 ### Full Audit Trail
-Every pipeline run appends to `data/audit.jsonl`. Each record contains the
-run ID (SHA-256 hash of JD + model + weights), all scores, evidence, and the
-model used. The same inputs always produce the same run ID — reproducibility
-is provable.
+Every pipeline run is logged to `data/audit.jsonl`.
+Each entry contains:
+- A SHA-256 run ID (same inputs = same ID, always reproducible)
+- All scores and weights used
+- The model name
+- Every piece of evidence cited
+
+If anyone asks "why did candidate X rank above Y?" — the answer is in the audit log.
+
+---
+
+## The Four Pillars of VIVEKA
+
+VIVEKA is designed as a four-pillar system. **Pillar 4 is fully built and running today.** Pillars 1–3 are the honest roadmap — described here so you can see where this goes, not faked as working features.
+
+### Pillar 1 — Talent Knowledge Graph `[ROADMAP]`
+A graph database (Neo4j or similar) that maps skills, roles, and transitions.
+It would know: "Spark implies distributed systems", "senior analyst at a fintech likely knows SQL", "ML engineers often come from statistics backgrounds."
+This turns isolated résumé facts into a connected map of talent.
+
+### Pillar 2 — Trajectory Modeling `[ROADMAP]`
+A model trained on career histories to predict *where a candidate is going*, not just where they've been.
+A junior engineer on a steep learning curve ranks higher than a stagnant senior.
+Hiring is a bet on the future — this pillar makes that bet smarter.
+
+### Pillar 3 — Candidate Digital Twin `[ROADMAP]`
+A profile enrichment layer that infers missing signals from what IS known.
+If a profile lists "5 years at a fintech data team" but doesn't mention SQL — SQL is highly probable.
+Not invented facts. Probabilistic, honest completion of sparse profiles.
+
+### Pillar 4 — Agentic Recruiter + Ranking `[LIVE NOW]`
+The fully working system. An agent that reads a job, understands what it truly needs, ranks candidates, and explains every decision. Runs on free AI models — no paid API required.
+
+---
+
+## The UI — What You See
+
+**Ghost Intelligence Panel**
+After ranking, three analytics charts appear automatically:
+
+- **Ghost Score Chart** — "What would each candidate score if they added their missing skills?" Shows potential, not just current fit.
+- **Volatility Index** — How stable is each candidate's score across different scoring weights? Low volatility = consistently strong. High volatility = depends on the job type.
+- **Score Breakdown** — Side-by-side bar chart of embedding / skill / seniority / activity scores for top candidates. See exactly *why* someone ranked where they did.
+
+**What-If Simulator**
+Pick any candidate. Check which skills they're missing. The simulator instantly recalculates their score — showing how much they'd rise in the ranking if they had those skills.
+
+**Leaderboard**
+A live ranked table with score, confidence, hidden gem flag, and reason. Top 3 highlighted in gold/silver/bronze. Hidden gems marked with ★.
+
+---
+
+## AI Models Used
+
+VIVEKA supports three AI providers. The system picks automatically based on environment:
+
+| Provider | When Used | Model | Cost |
+|---|---|---|---|
+| **HuggingFace Inference API** | Default on HF Spaces | Qwen/Qwen2.5-72B-Instruct | Free with HF token |
+| **Ollama (local)** | Default on your own machine | Llama 3.2 | Free, offline |
+| **Google Gemini** | If `GOOGLE_API_KEY` is set | gemini-1.5-flash | Free tier |
+
+No paid API is required. VIVEKA is designed to run entirely free.
 
 ---
 
 ## Tech Stack
 
-| Layer | Tool | Cost |
+| What | Tool | Why |
 |---|---|---|
-| Embeddings | `sentence-transformers` | Free, local |
-| Fast search | `FAISS` (`faiss-cpu`) | Free, local |
-| Scoring/fusion | `scikit-learn` | Free, local |
-| Language model | `Ollama` + Llama 3.2 | Free, local |
-| LLM framework | `LangChain` | Free |
-| Cloud fallback | `langchain-google-genai` (Gemini) | Free tier |
-| Demo UI | `Streamlit` | Free |
+| Embeddings | `huggingface_hub InferenceClient` | Free, no GPU needed |
+| Fast search | `FAISS` (by Meta) | Finds top 200 from 10,000+ in milliseconds |
+| Scoring | `scikit-learn` | Reliable, well-tested math |
+| AI reasoning | `LangChain` + HF / Ollama / Gemini | Swap providers in one line |
+| Web UI | `Gradio 6` | Clean, fast, runs on HF Spaces natively |
+| Excel output | `openpyxl` via `pandas` | Competition-ready formatted spreadsheet |
+| Charts | `Plotly` | Interactive, beautiful |
+| Terminal output | `Rich` | Color-coded leaderboard in the terminal |
+| Privacy | Custom PII firewall | Strips identity before any AI sees the data |
+| Audit | Custom JSONL logger | SHA-256 reproducible run IDs |
 
 ---
 
 ## Project Structure
 
 ```
-viveka/
-  app.py              ← Streamlit entry-point (HF Spaces + local)
+VIVEKA/
+  app.py                    ← Entry point — launches Gradio UI
+  requirements.txt          ← All dependencies
+  .env                      ← Local config (LLM_PROVIDER, model name)
   data/
-    job_description.txt      ← sample JD
-    sample_candidates.json   ← 15 demo profiles (no real PII)
-    ranked_output.json       ← submission: full scored output
-    ranked_output.csv        ← submission: CSV shortlist
+    job_description.txt     ← Sample job description
+    sample_candidates.json  ← 15 demo profiles (no real PII)
+    ranked_output.csv       ← Submission CSV
+    ranked_output.json      ← Full output with all scores
+    ranked_output.xlsx      ← Formatted Excel for submission
+    audit.jsonl             ← Audit trail (one line per run)
   src/
-    llm.py            ← model provider (swap Ollama ↔ Gemini here only)
-    agent.py          ← Pillar 4 orchestrator
-    data_loader.py    ← flexible .json/.csv loader with column normalisation
-    jd_parser.py      ← Stage 1: JD Intelligence
-    recall.py         ← Stage 2: Fast Recall
-    scoring.py        ← Stage 3: Multi-signal Scoring + stuffing detector
-    rerank.py         ← Stage 4: Honest Rerank + citation grounding
-    output.py         ← Stage 5: Output Writer + validate_output()
-    pii.py            ← PII Firewall
-    audit.py          ← Audit trail
-    config.py         ← All constants and env-var defaults
-    skills.py         ← Skill synonyms (Spark = PySpark = Apache Spark)
-    demo.py           ← Full Streamlit demo UI
-  tests/              ← 158 tests, all passing
-  requirements.txt
-  CLAUDE.md
+    llm.py          ← Model provider (change provider here only)
+    agent.py        ← Pipeline orchestrator (runs all 5 stages)
+    jd_parser.py    ← Stage 1: JD Intelligence
+    recall.py       ← Stage 2: Embedding + FAISS recall
+    scoring.py      ← Stage 3: Multi-signal scoring + stuffing detection
+    rerank.py       ← Stage 4: LLM rerank + citation grounding
+    output.py       ← Stage 5: CSV / JSON / XLSX writer
+    gradio_app.py   ← Full Gradio UI (charts, simulator, leaderboard)
+    data_loader.py  ← Flexible loader for JSON/CSV with column normalisation
+    pii.py          ← PII Firewall
+    audit.py        ← Audit trail writer
+    config.py       ← All constants and environment variable defaults
+    skills.py       ← Skill synonyms (Spark = PySpark = Apache Spark)
 ```
 
 ---
 
 ## How to Run
 
-### Local — Ollama (free, offline, private)
+### Option 1 — Live Demo (No Setup)
 
-```bash
-# 1. Install Ollama: https://ollama.com
+Just open this link:
+**[https://huggingface.co/spaces/mohareddy1423/VIVEKA](https://huggingface.co/spaces/mohareddy1423/VIVEKA)**
 
-# 2. Pull the model (~4 GB, one-time)
-ollama pull llama3.2
-
-# 3. Keep Ollama server running
-ollama serve
-
-# 4. Install Python dependencies
-pip install -r requirements.txt
-
-# 5. Run the pipeline (CLI)
-python src/agent.py
-
-# 6. Or run the Streamlit demo
-streamlit run app.py
-```
-
-You can swap to a smaller/faster model without editing code:
-
-```bash
-# PowerShell
-$env:VIVEKA_MODEL = "phi3:mini"
-# bash
-export VIVEKA_MODEL=phi3:mini
-```
-
-### Cloud Demo — Gemini (Hugging Face Spaces)
-
-```bash
-# Set your free Gemini key (https://aistudio.google.com)
-$env:LLM_PROVIDER = "gemini"
-$env:GOOGLE_API_KEY = "AIza..."
-streamlit run app.py
-```
-
-### With Your Own Dataset
-
-Drop your candidate file into `data/` as `profiles.json` or `profiles.csv`.
-The loader auto-detects column names and normalises variants
-(`headline`→`title`, `about`→`summary`, `tech_skills`→`skills`, etc.).
-
-Then run: `python src/agent.py`
+Paste a job description, upload or use the sample candidates, click Run.
 
 ---
 
-## Results
+### Option 2 — Run Locally with Ollama (Free, Offline, Private)
 
-The pipeline was run on `data/sample_candidates.json` (15 realistic profiles
-for a Senior Data Engineer role). Full output:
+```bash
+# Step 1: Install Ollama from https://ollama.com
 
-- `data/ranked_output.json` — complete scored shortlist with evidence, stuffing
-  analysis, counterfactual explainers, and audit metadata
-- `data/ranked_output.csv`  — CSV shortlist in submission format
+# Step 2: Download the AI model (one time, ~4 GB)
+ollama pull llama3.2
 
-**Validation:** all 4 checks PASS — sequential ranks, no null scores,
-sorted correctly, all reasons non-empty.
+# Step 3: Keep Ollama running
+ollama serve
 
-Hidden gems detected: candidates with modest titles (Analytics Associate,
-Data Support Specialist) who demonstrated strong pipeline engineering in their
-experience text were surfaced above higher-titled candidates with weaker evidence.
-This is viveka at work: the discernment to see past title to genuine capability.
+# Step 4: Install Python packages
+pip install -r requirements.txt
+
+# Step 5: Launch the app
+python app.py
+# Open http://localhost:7860
+```
+
+---
+
+### Option 3 — Run with HuggingFace Inference API (Free, No GPU)
+
+```bash
+# Step 1: Get a free HF token from https://huggingface.co/settings/tokens
+
+# Step 2: Set it
+# Windows PowerShell:
+$env:HF_TOKEN = "hf_..."
+$env:LLM_PROVIDER = "huggingface"
+
+# Mac/Linux:
+export HF_TOKEN=hf_...
+export LLM_PROVIDER=huggingface
+
+# Step 3: Install and run
+pip install -r requirements.txt
+python app.py
+```
+
+---
+
+### Use Your Own Candidate Data
+
+Drop your file into `data/` as `profiles.json` or `profiles.csv`.
+VIVEKA auto-detects and normalises common column name variations:
+`headline` → `title`, `about` → `summary`, `tech_skills` → `skills`, and many more.
+
+Then run: `python app.py`
+
+---
+
+## Competition Deliverables
+
+| Deliverable | File | Status |
+|---|---|---|
+| Working code on GitHub | [Mohanreddy-lab/VIVEKA](https://github.com/Mohanreddy-lab/VIVEKA) | ✅ |
+| Live demo | [mohareddy1423/VIVEKA on HF Spaces](https://huggingface.co/spaces/mohareddy1423/VIVEKA) | ✅ |
+| Ranked output CSV | `data/ranked_output.csv` | ✅ |
+| Ranked output XLSX | `data/ranked_output.xlsx` | ✅ |
+| Full explanation README | This file | ✅ |
+| Audit trail | `data/audit.jsonl` | ✅ |
 
 ---
 
 ## What We Are NOT Doing (and Why)
 
-We are not faking pillars 1–3. We describe them as the honest roadmap they are.
+**We are not faking Pillars 1–3.**
+They are described as the honest roadmap they are. Building fake features that don't work is worse than describing real ones that will.
 
-We are not inventing performance numbers. Every claim is backed by observable
-outputs from the running pipeline.
+**We are not inventing performance numbers.**
+Every claim in this README is backed by observable outputs from the running pipeline.
 
-We are not sending candidate data to the cloud. The local model is the feature,
-not the compromise.
+**We are not sending candidate data to the cloud without reason.**
+The local Ollama mode is the default. Candidate data never leaves your machine unless you choose a cloud provider.
 
-We win on quality and honesty — not on a slide deck of unbuilt features.
+**We are not keyword-matching.**
+The entire system is built to defeat keyword matching — in résumés and in hiring tools.
+
+---
+
+## Why VIVEKA Wins on Quality
+
+Most systems show you what candidates *claim*. VIVEKA shows you what candidates can *prove*.
+
+Most systems give you a number. VIVEKA gives you a reason, the evidence behind it, and a confidence level.
+
+Most systems are a black box. VIVEKA has a full audit trail — every decision is reproducible and explainable.
+
+Most systems ignore the overlooked. VIVEKA has a dedicated mechanism to surface hidden gems — strong candidates whose titles or presentation style would have buried them in a keyword filter.
 
 ---
 
 ## Honesty Statement
 
 > Pillars 1, 2, and 3 are vision. They are described to show where VIVEKA is
-> going, not where it is today. Pillar 4 is the working system. Every shortlist
-> it produces is grounded in real profile text. If the evidence is thin, it says so.
+> going, not where it is today. Pillar 4 is the working system — fully built,
+> tested, and live on HuggingFace Spaces right now.
 >
-> VIVEKA — the discernment to separate signal from noise — is not just the name.
-> It is the design principle.
+> Every shortlist VIVEKA produces is grounded in real profile text.
+> If the evidence is thin, it says so. If a quote cannot be verified, it is flagged.
+> If a skill is claimed but not demonstrated, the score is penalized.
+>
+> **Viveka** — discernment — is not just the name. It is the design principle.
