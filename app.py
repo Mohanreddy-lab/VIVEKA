@@ -5,7 +5,7 @@ Delegates to src/demo.py after applying a provider guard so the app shows
 a friendly setup message instead of crashing when GOOGLE_API_KEY is missing.
 
 LLM modes:
-  Local (default):   LLM_PROVIDER=ollama  MANTHAN_MODEL=llama3.2
+  Local (default):   LLM_PROVIDER=ollama  VIVEKA_MODEL=llama3.2
   Cloud demo:        LLM_PROVIDER=gemini  GOOGLE_API_KEY=<your-free-key>
 
 Run:
@@ -52,7 +52,7 @@ GOOGLE_API_KEY=AIza...your-key...
 **Or switch to fully local mode (no key needed):**
 ```
 LLM_PROVIDER=ollama
-MANTHAN_MODEL=llama3.2
+VIVEKA_MODEL=llama3.2
 ```
 Install Ollama at https://ollama.com, then: `ollama pull llama3.2`
     """)

@@ -4,7 +4,7 @@
 #
 # Environment variables:
 #   LLM_PROVIDER    "ollama" (default) | "gemini"
-#   MANTHAN_MODEL   Ollama model name  (default: "llama3.2")
+#   VIVEKA_MODEL    Ollama model name  (default: "llama3.2")
 #   GOOGLE_API_KEY  required when LLM_PROVIDER=gemini
 
 import os
@@ -27,7 +27,7 @@ def get_llm(json_mode: bool = False):
     from outputting markdown or prose instead of JSON.
 
     Env vars:
-      MANTHAN_MODEL   — model name (default: llama3.2)
+      VIVEKA_MODEL    — model name (default: llama3.2)
       OLLAMA_HOST     — Ollama server URL (default: http://localhost:11434)
       LLM_PROVIDER    — "ollama" (default) | "gemini"
       GOOGLE_API_KEY  — required when LLM_PROVIDER=gemini
@@ -36,7 +36,7 @@ def get_llm(json_mode: bool = False):
 
     if provider == "ollama":
         from langchain_ollama import ChatOllama
-        model = os.getenv("MANTHAN_MODEL", DEFAULT_MODEL)
+        model = os.getenv("VIVEKA_MODEL", DEFAULT_MODEL)
         host  = os.getenv("OLLAMA_HOST",   DEFAULT_HOST)
         kwargs: dict = {"model": model, "temperature": 0, "base_url": host}
         if json_mode:
@@ -51,7 +51,7 @@ def get_llm(json_mode: bool = False):
             raise EnvironmentError(
                 "GOOGLE_API_KEY not set. Add it to your .env file or environment."
             )
-        model = os.getenv("MANTHAN_MODEL", "gemini-1.5-flash")
+        model = os.getenv("VIVEKA_MODEL", "gemini-1.5-flash")
         log.info("Gemini model=%s", model)
         return ChatGoogleGenerativeAI(model=model, temperature=0, google_api_key=api_key)
 
@@ -63,7 +63,7 @@ def check_ollama() -> tuple[bool, str]:
     Returns (ok, message).
     """
     import requests
-    model = os.getenv("MANTHAN_MODEL", DEFAULT_MODEL)
+    model = os.getenv("VIVEKA_MODEL", DEFAULT_MODEL)
     host  = os.getenv("OLLAMA_HOST",  DEFAULT_HOST)
     try:
         r = requests.get(f"{host}/api/tags", timeout=5)

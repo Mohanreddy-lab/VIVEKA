@@ -113,4 +113,4 @@ class AuditLogger:
 
 
 def is_audit_on() -> bool:
-    return os.getenv("MANTHAN_AUDIT", "on").lower() not in ("off", "0", "false", "no")
+    return os.getenv("VIVEKA_AUDIT", "on").lower() not in ("off", "0", "false", "no")

@@ -146,7 +146,7 @@ All identity fields (name, email, phone, gender, age, location, nationality,
 photo, address) are stripped from every profile **before** scoring or LLM rerank.
 Enabled by default. Ranking is based on skills and evidence alone.
 
-Toggle: `MANTHAN_PII_FIREWALL=off` to disable (not recommended).
+Toggle: `VIVEKA_PII_FIREWALL=off` to disable (not recommended).
 
 ### Citation Grounding
 The LLM must provide verbatim snippets from the profile as evidence for its score.
@@ -239,9 +239,9 @@ You can swap to a smaller/faster model without editing code:
 
 ```bash
 # PowerShell
-$env:MANTHAN_MODEL = "phi3:mini"
+$env:VIVEKA_MODEL = "phi3:mini"
 # bash
-export MANTHAN_MODEL=phi3:mini
+export VIVEKA_MODEL=phi3:mini
 ```
 
 ### Cloud Demo — Gemini (Hugging Face Spaces)

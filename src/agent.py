@@ -179,7 +179,7 @@ def run_pipeline(
     log.info("  Scored %d candidates.  Hidden gems found: %d", len(scored), gems)
 
     # ── Stage 4: LLM Rerank ───────────────────────────────────────────────────
-    n = rerank_n or int(os.getenv("MANTHAN_RERANK_N", 50))
+    n = rerank_n or int(os.getenv("VIVEKA_RERANK_N", 50))
     rerank_key = f"ranked_{scored_key}_{n}"
     ranked = None if force else _cache_load(cache_dir, rerank_key)
     if ranked:
@@ -198,7 +198,7 @@ def run_pipeline(
 
     # ── Audit trail ───────────────────────────────────────────────────────────
     if out_dir and is_audit_on():
-        model   = os.getenv("MANTHAN_MODEL", "llama3.2")
+        model   = os.getenv("VIVEKA_MODEL", "llama3.2")
         weights = get_weights()
         logger  = AuditLogger(out_dir, jd_text, parsed_jd, model, weights)
         for rank, candidate in enumerate(ranked, 1):

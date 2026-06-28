@@ -11,10 +11,10 @@ import os
 
 def get_weights() -> tuple[float, float, float, float]:
     """Return (embed, skill, seniority, activity) weights, normalised to sum=1."""
-    w_embed     = float(os.getenv("MANTHAN_W_EMBED",      0.30))
-    w_skill     = float(os.getenv("MANTHAN_W_SKILL",      0.40))
-    w_seniority = float(os.getenv("MANTHAN_W_SENIORITY",  0.15))
-    w_activity  = float(os.getenv("MANTHAN_W_ACTIVITY",   0.15))
+    w_embed     = float(os.getenv("VIVEKA_W_EMBED",      0.30))
+    w_skill     = float(os.getenv("VIVEKA_W_SKILL",      0.40))
+    w_seniority = float(os.getenv("VIVEKA_W_SENIORITY",  0.15))
+    w_activity  = float(os.getenv("VIVEKA_W_ACTIVITY",   0.15))
     total = w_embed + w_skill + w_seniority + w_activity or 1.0
     return (w_embed/total, w_skill/total, w_seniority/total, w_activity/total)
 
@@ -50,20 +50,20 @@ JUNIOR_WORDS = {"junior", "jr", "entry", "associate", "intern", "trainee", "grad
 # Pipeline defaults  (all overridable via env vars)
 # ---------------------------------------------------------------------------
 
-RECALL_TOP_K  = int(os.getenv("MANTHAN_RECALL_K",   200))
-SCORE_TOP_N   = int(os.getenv("MANTHAN_SCORE_N",     50))
-RERANK_N      = int(os.getenv("MANTHAN_RERANK_N",    50))
-PROFILE_CHARS = int(float(os.getenv("MANTHAN_PROFILE_CHARS", 900)))
+RECALL_TOP_K  = int(os.getenv("VIVEKA_RECALL_K",   200))
+SCORE_TOP_N   = int(os.getenv("VIVEKA_SCORE_N",     50))
+RERANK_N      = int(os.getenv("VIVEKA_RERANK_N",    50))
+PROFILE_CHARS = int(float(os.getenv("VIVEKA_PROFILE_CHARS", 900)))
 
-BLEND_COMPOSITE = float(os.getenv("MANTHAN_BLEND_COMPOSITE", 0.5))
-BLEND_LLM       = float(os.getenv("MANTHAN_BLEND_LLM",       0.5))
+BLEND_COMPOSITE = float(os.getenv("VIVEKA_BLEND_COMPOSITE", 0.5))
+BLEND_LLM       = float(os.getenv("VIVEKA_BLEND_LLM",       0.5))
 
 # ---------------------------------------------------------------------------
 # Keyword-stuffing detector
 # ---------------------------------------------------------------------------
 
 # Penalty multiplier when stuffing_ratio > 0. Set to 0 to disable.
-STUFFING_PENALTY: float = float(os.getenv("MANTHAN_STUFFING_PENALTY", 0.30))
+STUFFING_PENALTY: float = float(os.getenv("VIVEKA_STUFFING_PENALTY", 0.30))
 
 # ---------------------------------------------------------------------------
 # Field name priority lists  (shared by recall, scoring, rerank, output)
@@ -115,4 +115,4 @@ SENIORITY_TEXT_FIELDS: list[str] = [
 # Embedding model
 # ---------------------------------------------------------------------------
 
-EMBED_MODEL = os.getenv("MANTHAN_EMBED_MODEL", "all-MiniLM-L6-v2")
+EMBED_MODEL = os.getenv("VIVEKA_EMBED_MODEL", "all-MiniLM-L6-v2")

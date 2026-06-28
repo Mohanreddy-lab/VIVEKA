@@ -14,10 +14,10 @@ God-level additions:
     free, computed from the same scoring math.
 
 Weights (tune via env vars, always auto-normalised):
-  MANTHAN_W_EMBED      default 0.30
-  MANTHAN_W_SKILL      default 0.40
-  MANTHAN_W_SENIORITY  default 0.15
-  MANTHAN_W_ACTIVITY   default 0.15
+  VIVEKA_W_EMBED      default 0.30
+  VIVEKA_W_SKILL      default 0.40
+  VIVEKA_W_SENIORITY  default 0.15
+  VIVEKA_W_ACTIVITY   default 0.15
 """
 
 import os

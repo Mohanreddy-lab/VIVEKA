@@ -85,8 +85,8 @@ viveka/
 - All model choices come from src/llm.py, so we can swap
   Ollama <-> Gemini in ONE place.
 - Read any settings (model name) from environment variables.
-- NOTE: env var names use MANTHAN_ prefix (e.g. MANTHAN_MODEL,
-  MANTHAN_RERANK_N). Do NOT rename them — they are stable API surface.
+- NOTE: env var names use VIVEKA_ prefix (e.g. VIVEKA_MODEL,
+  VIVEKA_RERANK_N). Do NOT rename them — they are stable API surface.
 
 ## Honesty rules (these win trust)
 - Do NOT build pillars 1-3. Only describe them in the README.

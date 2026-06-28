@@ -4,7 +4,7 @@ pii.py — PII Firewall
 Strips identity fields from candidate profiles BEFORE they enter scoring
 or LLM rerank. Ranking is based on skills and evidence alone.
 
-Toggle: MANTHAN_PII_FIREWALL=off to disable (default: on).
+Toggle: VIVEKA_PII_FIREWALL=off to disable (default: on).
 """
 
 import os
@@ -51,4 +51,4 @@ def redact_profile(profile: dict) -> dict:
 
 def is_firewall_on() -> bool:
     """Return True if PII firewall is enabled (default: on)."""
-    return os.getenv("MANTHAN_PII_FIREWALL", "on").lower() not in ("off", "0", "false", "no")
+    return os.getenv("VIVEKA_PII_FIREWALL", "on").lower() not in ("off", "0", "false", "no")

@@ -48,12 +48,12 @@ log = logging.getLogger("viveka.rerank")
 
 def _cfg() -> dict:
     return {
-        "max_chars":        int(os.getenv("MANTHAN_PROFILE_CHARS",    900)),
-        "rerank_n":         int(os.getenv("MANTHAN_RERANK_N",          50)),
-        "blend_composite":  float(os.getenv("MANTHAN_BLEND_COMPOSITE", 0.50)),
-        "blend_llm":        float(os.getenv("MANTHAN_BLEND_LLM",       0.50)),
-        "max_retries":      int(os.getenv("MANTHAN_LLM_RETRIES",         2)),
-        "parallel_workers": int(os.getenv("MANTHAN_PARALLEL_WORKERS",    5)),
+        "max_chars":        int(os.getenv("VIVEKA_PROFILE_CHARS",    900)),
+        "rerank_n":         int(os.getenv("VIVEKA_RERANK_N",          50)),
+        "blend_composite":  float(os.getenv("VIVEKA_BLEND_COMPOSITE", 0.50)),
+        "blend_llm":        float(os.getenv("VIVEKA_BLEND_LLM",       0.50)),
+        "max_retries":      int(os.getenv("VIVEKA_LLM_RETRIES",         2)),
+        "parallel_workers": int(os.getenv("VIVEKA_PARALLEL_WORKERS",    5)),
     }
 
 CONFIDENCE_WEIGHT = {"high": 1.0, "medium": 0.70, "low": 0.30}

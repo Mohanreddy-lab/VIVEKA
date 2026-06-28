@@ -63,10 +63,10 @@ with st.sidebar:
 
     model_name = st.text_input(
         "Ollama model",
-        value=os.getenv("MANTHAN_MODEL", "llama3.2"),
+        value=os.getenv("VIVEKA_MODEL", "llama3.2"),
         help="Must be pulled: `ollama pull llama3.2`",
     )
-    os.environ["MANTHAN_MODEL"] = model_name
+    os.environ["VIVEKA_MODEL"] = model_name
 
     rerank_n = st.slider(
         "Candidates to rerank (LLM calls)",
@@ -86,7 +86,7 @@ with st.sidebar:
         disabled=not parallel_mode,
         help="Simultaneous LLM calls. 5 is sweet spot for most hardware.",
     )
-    os.environ["MANTHAN_PARALLEL_WORKERS"] = str(max_workers)
+    os.environ["VIVEKA_PARALLEL_WORKERS"] = str(max_workers)
 
     st.divider()
     st.subheader("Signal Weights")
@@ -97,10 +97,10 @@ with st.sidebar:
     w_seniority = st.slider("Seniority fit",         0.0, 1.0, 0.15, 0.05)
     w_activity  = st.slider("Activity / behavior",   0.0, 1.0, 0.15, 0.05)
 
-    os.environ["MANTHAN_W_EMBED"]     = str(w_embed)
-    os.environ["MANTHAN_W_SKILL"]     = str(w_skill)
-    os.environ["MANTHAN_W_SENIORITY"] = str(w_seniority)
-    os.environ["MANTHAN_W_ACTIVITY"]  = str(w_activity)
+    os.environ["VIVEKA_W_EMBED"]     = str(w_embed)
+    os.environ["VIVEKA_W_SKILL"]     = str(w_skill)
+    os.environ["VIVEKA_W_SENIORITY"] = str(w_seniority)
+    os.environ["VIVEKA_W_ACTIVITY"]  = str(w_activity)
 
     st.divider()
     st.subheader("📁 Upload Profiles")
@@ -126,7 +126,7 @@ with st.sidebar:
         value=True,
         help="Removes name, gender, age, location before scoring. Score the work, not the identity.",
     )
-    os.environ["MANTHAN_PII_FIREWALL"] = "on" if pii_on else "off"
+    os.environ["VIVEKA_PII_FIREWALL"] = "on" if pii_on else "off"
     if pii_on:
         st.success("PII firewall ON — identity fields stripped before scoring.")
     else:
@@ -137,7 +137,7 @@ with st.sidebar:
         value=True,
         help="Writes every ranking decision to data/audit.jsonl for reproducibility.",
     )
-    os.environ["MANTHAN_AUDIT"] = "on" if audit_on else "off"
+    os.environ["VIVEKA_AUDIT"] = "on" if audit_on else "off"
 
     st.divider()
     if st.button("🔍 Check Ollama connection"):

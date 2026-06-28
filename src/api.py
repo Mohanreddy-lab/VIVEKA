@@ -10,10 +10,10 @@ Endpoints:
   POST /api/v1/rank               — submit ranking job, returns job_id
   GET  /api/v1/jobs/{job_id}      — poll job status / fetch result
 
-Optional API key auth: set MANTHAN_API_KEY in .env to enable.
+Optional API key auth: set VIVEKA_API_KEY in .env to enable.
   All non-health endpoints require: Authorization: Bearer <key>
 
-CORS: controlled via MANTHAN_CORS_ORIGINS (comma-separated).
+CORS: controlled via VIVEKA_CORS_ORIGINS (comma-separated).
   Default: "*" (open). Set to "https://yourdomain.com" in production.
 
 Run:
@@ -53,7 +53,7 @@ app = FastAPI(
 )
 
 # CORS — default open for local dev; restrict in production
-_cors_origins = [o.strip() for o in os.getenv("MANTHAN_CORS_ORIGINS", "*").split(",")]
+_cors_origins = [o.strip() for o in os.getenv("VIVEKA_CORS_ORIGINS", "*").split(",")]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_cors_origins,
@@ -67,7 +67,7 @@ app.add_middleware(
 # ---------------------------------------------------------------------------
 
 _bearer = HTTPBearer(auto_error=False)
-_API_KEY = os.getenv("MANTHAN_API_KEY", "")
+_API_KEY = os.getenv("VIVEKA_API_KEY", "")
 
 
 def _check_auth(creds: Optional[HTTPAuthorizationCredentials] = Security(_bearer)):

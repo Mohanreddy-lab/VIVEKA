@@ -16,7 +16,7 @@ COPY . .
 # Default points to Docker Desktop host bridge.
 ENV OLLAMA_HOST=http://host.docker.internal:11434
 ENV LLM_PROVIDER=ollama
-ENV MANTHAN_MODEL=phi3:mini
+ENV VIVEKA_MODEL=llama3.2
 
 # sentence-transformers downloads the model on first use.
 # Pre-warm it at build time so the first request isn't slow.

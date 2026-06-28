@@ -71,17 +71,17 @@ class TestRedactProfile:
 
 class TestFirewallToggle:
     def test_default_is_on(self, monkeypatch):
-        monkeypatch.delenv("MANTHAN_PII_FIREWALL", raising=False)
+        monkeypatch.delenv("VIVEKA_PII_FIREWALL", raising=False)
         assert is_firewall_on() is True
 
     def test_off_disables(self, monkeypatch):
-        monkeypatch.setenv("MANTHAN_PII_FIREWALL", "off")
+        monkeypatch.setenv("VIVEKA_PII_FIREWALL", "off")
         assert is_firewall_on() is False
 
     def test_zero_disables(self, monkeypatch):
-        monkeypatch.setenv("MANTHAN_PII_FIREWALL", "0")
+        monkeypatch.setenv("VIVEKA_PII_FIREWALL", "0")
         assert is_firewall_on() is False
 
     def test_on_enables(self, monkeypatch):
-        monkeypatch.setenv("MANTHAN_PII_FIREWALL", "on")
+        monkeypatch.setenv("VIVEKA_PII_FIREWALL", "on")
         assert is_firewall_on() is True
