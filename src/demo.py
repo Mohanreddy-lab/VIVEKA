@@ -1,5 +1,5 @@
 """
-demo.py — MANTHAN Streamlit Demo (Fable 5 Edition)
+demo.py — VIVEKA Streamlit Demo
 
 Features:
   • Parallel LLM reranking — all candidates scored simultaneously (5–10× faster)
@@ -35,7 +35,7 @@ from output import normalize_scores
 # ---------------------------------------------------------------------------
 
 st.set_page_config(
-    page_title="MANTHAN — Candidate Ranking",
+    page_title="VIVEKA — Intelligent Candidate Ranking",
     page_icon="🔍",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -51,7 +51,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🔍 MANTHAN — Intelligent Candidate Ranking")
+st.title("🔍 VIVEKA — Discerning True Talent from Noise")
 st.caption("Offline · Free · Private · Powered by Ollama locally")
 
 # ---------------------------------------------------------------------------
@@ -661,7 +661,7 @@ def _make_csv(ranked: list) -> str:
 # Run button
 # ---------------------------------------------------------------------------
 
-run_btn = st.button("▶  Run MANTHAN", type="primary", use_container_width=True)
+run_btn = st.button("▶  Run VIVEKA", type="primary", use_container_width=True)
 
 if run_btn:
     if len(jd_text.strip()) < 30:

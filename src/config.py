@@ -1,4 +1,4 @@
-"""config.py — All magic numbers and shared field lists for MANTHAN.
+"""config.py — All magic numbers and shared field lists for VIVEKA.
 
 Single source of truth — change a constant here and every module picks it up.
 """

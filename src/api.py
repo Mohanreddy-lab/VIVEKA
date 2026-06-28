@@ -1,5 +1,5 @@
 """
-api.py — MANTHAN REST API
+api.py — VIVEKA REST API
 
 Async job queue: POST /api/v1/rank returns a job_id immediately.
 Poll GET /api/v1/jobs/{job_id} until status == "done".
@@ -37,14 +37,14 @@ from pydantic import BaseModel, Field
 from skills import SKILL_SYNONYMS
 from llm import check_ollama
 
-log = logging.getLogger("manthan.api")
+log = logging.getLogger("viveka.api")
 
 # ---------------------------------------------------------------------------
 # App setup
 # ---------------------------------------------------------------------------
 
 app = FastAPI(
-    title="MANTHAN Candidate Ranking API",
+    title="VIVEKA Candidate Ranking API",
     description=(
         "Intelligent offline candidate ranking powered by local LLMs.\n\n"
         "Submit a job via POST /api/v1/rank, then poll GET /api/v1/jobs/{job_id}."

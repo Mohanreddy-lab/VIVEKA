@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from llm import get_llm
 
-log = logging.getLogger("manthan.jd_parser")
+log = logging.getLogger("viveka.jd_parser")
 from utils import safe_parse_json, as_list
 from langchain_core.prompts import ChatPromptTemplate
 

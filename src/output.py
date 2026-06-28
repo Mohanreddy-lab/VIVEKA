@@ -155,7 +155,7 @@ def _print_summary_rich(ranked: List[Dict], top_n: int) -> None:
     top     = ranked[:top_n]
 
     table = Table(
-        title=f"MANTHAN — Final Shortlist  ({len(ranked)} candidates ranked)",
+        title=f"VIVEKA — Final Shortlist  ({len(ranked)} candidates ranked)",
         box=rich_box.ROUNDED,
         show_header=True,
         header_style="bold cyan",
@@ -244,7 +244,7 @@ def _print_summary_plain(ranked: List[Dict], top_n: int) -> None:
     top  = ranked[:top_n]
 
     print(f"\n{'='*70}")
-    print(f"  MANTHAN — Final Shortlist  ({len(ranked)} candidates ranked)")
+    print(f"  VIVEKA — Final Shortlist  ({len(ranked)} candidates ranked)")
     print(f"{'='*70}")
     print(f"{'#':<4} {'ID':<14} {'Score':>6} {'LLM':>4} {'Conf':<8} {'Gem':<4} Reason")
     print(f"{'-'*70}")

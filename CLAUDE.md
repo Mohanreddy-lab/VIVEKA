@@ -1,22 +1,23 @@
-# MANTHAN — Churning the ocean of talent
+# VIVEKA — Discerning true talent from noise
 
 ## The vision
-MANTHAN finds the best candidate for a job — not by matching
-keywords, but by understanding the real need, ranking by evidence,
-and explaining every choice. Like churning an ocean to find the
-hidden gems. Built for the "India Runs" Data & AI Challenge.
+VIVEKA discerns the best candidate for a job — not by matching keywords,
+but by separating genuine signal from résumé noise, ranking by evidence,
+and explaining every choice. Like viveka (विवेक) — the wisdom to tell
+true from false, the real from the surface. Built for the "India Runs"
+Data & AI Challenge.
 
 ## Runs fully offline, free
-MANTHAN uses a LOCAL language model (Ollama + Llama), so it needs
-NO paid API and NO internet. Candidate data never leaves the
-machine. This is a feature: privacy-first hiring.
+VIVEKA uses a LOCAL language model (Ollama + Llama 3.2), so it needs
+NO paid API and NO internet. Candidate data never leaves the machine.
+This is a feature: privacy-first hiring.
 
 ## What we must deliver (3 things, scored)
 1. A clean GitHub repo with working code.
 2. A README that explains the full vision and our decisions.
 3. A ranked output file in the EXACT format the organizers ask for.
 
-## The full MANTHAN system (4 pillars)
+## The full VIVEKA system (4 pillars)
 Pillar 1 - Talent Knowledge Graph  ........ ROADMAP (describe, don't build)
 Pillar 2 - Trajectory modeling  ........... ROADMAP (describe, don't build)
 Pillar 3 - Candidate Digital Twin  ........ ROADMAP (describe, don't build)
@@ -57,16 +58,20 @@ pipeline, and presents the shortlist with clear explanations.
 - Optional cloud backup: Gemini free tier (only if needed)
 
 ## Project structure
-manthan/
-  data/            # dataset goes here (not added yet)
+viveka/
+  app.py           # Streamlit entry-point (HF Spaces + local)
+  data/            # dataset goes here
   src/
     llm.py         # returns the language model (Ollama by default)
     agent.py       # Pillar 4: decomposes job, runs pipeline, explains
+    data_loader.py # flexible .json/.csv loader with column normalisation
     jd_parser.py   # Stage 1
     recall.py      # Stage 2
     scoring.py     # Stage 3
     rerank.py      # Stage 4
     output.py      # Stage 5
+    pii.py         # PII firewall
+    audit.py       # Audit trail
     demo.py        # Streamlit app
   README.md
   requirements.txt
@@ -80,6 +85,8 @@ manthan/
 - All model choices come from src/llm.py, so we can swap
   Ollama <-> Gemini in ONE place.
 - Read any settings (model name) from environment variables.
+- NOTE: env var names use MANTHAN_ prefix (e.g. MANTHAN_MODEL,
+  MANTHAN_RERANK_N). Do NOT rename them — they are stable API surface.
 
 ## Honesty rules (these win trust)
 - Do NOT build pillars 1-3. Only describe them in the README.

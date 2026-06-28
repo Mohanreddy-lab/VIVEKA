@@ -1,5 +1,5 @@
 # llm.py — Central model provider
-# Single place to configure which LLM MANTHAN uses.
+# Single place to configure which LLM VIVEKA uses.
 # Every other module calls get_llm() — never imports a model directly.
 #
 # Environment variables:
@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-log = logging.getLogger("manthan.llm")
+log = logging.getLogger("viveka.llm")
 
 DEFAULT_MODEL  = "llama3.2"
 DEFAULT_HOST   = "http://localhost:11434"

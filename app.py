@@ -1,5 +1,5 @@
 """
-app.py — MANTHAN Streamlit entry-point for Hugging Face Spaces and local runs.
+app.py — VIVEKA Streamlit entry-point for Hugging Face Spaces and local runs.
 
 Delegates to src/demo.py after applying a provider guard so the app shows
 a friendly setup message instead of crashing when GOOGLE_API_KEY is missing.
@@ -27,8 +27,8 @@ import streamlit as st
 provider = os.getenv("LLM_PROVIDER", "ollama").lower()
 
 if provider == "gemini" and not os.getenv("GOOGLE_API_KEY"):
-    st.set_page_config(page_title="MANTHAN — Setup", page_icon="🔍")
-    st.title("🔍 MANTHAN — Setup Required")
+    st.set_page_config(page_title="VIVEKA — Setup", page_icon="🔍")
+    st.title("🔍 VIVEKA — Setup Required")
     st.error(
         "**GOOGLE_API_KEY is not set.**\n\n"
         "This instance is configured to use the Gemini API (cloud mode) "

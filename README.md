@@ -1,6 +1,6 @@
 ---
-title: MANTHAN
-emoji: 🌊
+title: VIVEKA
+emoji: 🔍
 colorFrom: blue
 colorTo: purple
 sdk: streamlit
@@ -8,11 +8,14 @@ app_file: app.py
 pinned: false
 ---
 
-# MANTHAN — Churning the Ocean of Talent
+# VIVEKA — Discerning True Talent from Noise
 
-> *Manthan* (Sanskrit: मंथन) — the great churning. In mythology, gods and demons
-> churned the cosmic ocean to surface hidden treasures. We churn the talent pool
-> to surface the right person for the right role.
+> *Viveka* (Sanskrit: विवेक) — discernment. The clarity to tell true from false,
+> signal from noise. In classical thought, viveka is the faculty that sees past
+> surface appearances to perceive what is real.
+>
+> We apply that faculty to hiring: discerning a candidate's genuine capability
+> from keyword noise and surface-level résumé claims.
 
 Built for the **India Runs Data & AI Challenge** — Track 1: AI-Powered Candidate Ranking.
 
@@ -20,26 +23,27 @@ Built for the **India Runs Data & AI Challenge** — Track 1: AI-Powered Candida
 
 ## The Vision
 
-Most hiring tools match keywords. They miss the candidate who has never used
-the exact tool but will master it in a week. They surface the loudest résumé,
-not the best fit.
+Most hiring tools match keywords. They surface the résumé that mentions
+"Apache Spark" six times — not the engineer who built production pipelines with it.
+They reward noise over signal.
 
-MANTHAN is different. It reads a job description the way a great recruiter does —
-understanding what the role *really* needs, not just what it says. It ranks
-candidates by evidence, flags hidden gems, and explains every choice in plain words.
+VIVEKA is different. It reads a job description the way a seasoned recruiter does —
+understanding what the role *truly* needs, not just what the text says. It scores
+candidates on genuine evidence, flags hidden gems whose titles undersell their
+ability, and explains every ranking decision in plain words.
 
 The system is built on four pillars. One is fully working today. The other three
-are the roadmap — described honestly as future work, never faked.
+are the honest roadmap — described as future work, never faked.
 
 ---
 
 ## Runs Fully Offline — Free, Private, No API Key
 
-MANTHAN uses a **local language model** (Ollama + Llama 3.2). It needs no paid API
+VIVEKA uses a **local language model** (Ollama + Llama 3.2). It needs no paid API
 and no internet connection. Candidate data never leaves the machine.
 
 This is not a workaround. It is a design choice. A hiring tool that sends résumés
-to a third-party cloud raises real privacy concerns. MANTHAN avoids that entirely.
+to a third-party cloud raises real privacy concerns. VIVEKA avoids that entirely.
 
 **Cloud mode** (Gemini free tier) is available for demos on Hugging Face Spaces.
 
@@ -84,7 +88,7 @@ unlocks the long tail of overlooked applicants.
 
 ### Pillar 4 — Agentic Recruiter + Ranking `[WORKING NOW]`
 
-The fully built, running core of MANTHAN. An agent that reads a job, understands
+The fully built, running core of VIVEKA. An agent that reads a job, understands
 what it truly needs, and produces a ranked shortlist with honest explanations.
 Runs entirely on a local model — no cloud required.
 
@@ -129,9 +133,9 @@ Job Description (raw text)
 
 ### The "Hidden Gem" Flag
 
-A candidate is flagged as a hidden gem when their composite score lands in the
-top tier but their embedding (raw semantic similarity) ranked them lower. These
-are the candidates a keyword filter would have dropped — MANTHAN surfaces them.
+A candidate is flagged as a hidden gem when their composite score (multi-signal)
+lands in the top tier but their raw embedding rank placed them lower. These are
+the candidates a keyword filter would have dropped — VIVEKA's discernment surfaces them.
 
 ---
 
@@ -180,7 +184,7 @@ is provable.
 ## Project Structure
 
 ```
-manthan/
+viveka/
   app.py              ← Streamlit entry-point (HF Spaces + local)
   data/
     job_description.txt      ← sample JD
@@ -274,6 +278,7 @@ sorted correctly, all reasons non-empty.
 Hidden gems detected: candidates with modest titles (Analytics Associate,
 Data Support Specialist) who demonstrated strong pipeline engineering in their
 experience text were surfaced above higher-titled candidates with weaker evidence.
+This is viveka at work: the discernment to see past title to genuine capability.
 
 ---
 
@@ -293,6 +298,9 @@ We win on quality and honesty — not on a slide deck of unbuilt features.
 
 ## Honesty Statement
 
-> Pillars 1, 2, and 3 are vision. They are described to show where MANTHAN is
+> Pillars 1, 2, and 3 are vision. They are described to show where VIVEKA is
 > going, not where it is today. Pillar 4 is the working system. Every shortlist
 > it produces is grounded in real profile text. If the evidence is thin, it says so.
+>
+> VIVEKA — the discernment to separate signal from noise — is not just the name.
+> It is the design principle.

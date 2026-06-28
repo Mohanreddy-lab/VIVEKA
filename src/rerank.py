@@ -39,7 +39,7 @@ from llm   import get_llm
 from utils import safe_parse_json
 from langchain_core.prompts import ChatPromptTemplate
 
-log = logging.getLogger("manthan.rerank")
+log = logging.getLogger("viveka.rerank")
 
 
 # ---------------------------------------------------------------------------

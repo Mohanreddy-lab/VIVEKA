@@ -1,5 +1,5 @@
 """
-data_loader.py — Flexible dataset loader for MANTHAN.
+data_loader.py — Flexible dataset loader for VIVEKA.
 
 Accepts .json or .csv; auto-detects and normalises column names to the
 internal profile schema; skips gracefully if any field is missing.
@@ -24,7 +24,7 @@ import logging
 from pathlib import Path
 from typing import List, Dict, Optional
 
-log = logging.getLogger("manthan.data_loader")
+log = logging.getLogger("viveka.data_loader")
 
 # Maps raw column names (lowercase) -> canonical field name.
 # Skills fields are handled specially: multiple fields are MERGED into one list.

@@ -1,5 +1,5 @@
 """
-audit.py — Full audit trail for every MANTHAN ranking decision.
+audit.py — Full audit trail for every VIVEKA ranking decision.
 
 Hiring is legally sensitive — decisions must be inspectable, reproducible,
 and explainable. Every pipeline run appends to data/audit.jsonl (one JSON
@@ -23,7 +23,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Dict, Tuple
 
-log = logging.getLogger("manthan.audit")
+log = logging.getLogger("viveka.audit")
 
 # Fields written per candidate — internal bookkeeping (_id, _rank_jump) excluded
 _CANDIDATE_FIELDS = (

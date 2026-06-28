@@ -25,7 +25,7 @@ from typing import List, Dict
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-log = logging.getLogger("manthan.agent")
+log = logging.getLogger("viveka.agent")
 
 from jd_parser   import parse_jd
 from recall      import RecallEngine

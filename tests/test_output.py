@@ -86,7 +86,7 @@ class TestPrintSummary:
     def test_runs_without_error(self, capsys):
         print_summary(SAMPLE_RANKED, top_n=5)
         out = capsys.readouterr().out
-        assert "MANTHAN" in out
+        assert "VIVEKA" in out
 
     def test_shows_hidden_gem_section(self, capsys):
         print_summary(SAMPLE_RANKED, top_n=5)
