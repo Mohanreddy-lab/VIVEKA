@@ -1,10 +1,20 @@
+---
+title: MANTHAN
+emoji: 🌊
+colorFrom: blue
+colorTo: purple
+sdk: streamlit
+app_file: app.py
+pinned: false
+---
+
 # MANTHAN — Churning the Ocean of Talent
 
 > *Manthan* (Sanskrit: मंथन) — the great churning. In mythology, gods and demons
 > churned the cosmic ocean to surface hidden treasures. We churn the talent pool
 > to surface the right person for the right role.
 
-Built for the **India Runs Data & AI Challenge**.
+Built for the **India Runs Data & AI Challenge** — Track 1: AI-Powered Candidate Ranking.
 
 ---
 
@@ -30,6 +40,8 @@ and no internet connection. Candidate data never leaves the machine.
 
 This is not a workaround. It is a design choice. A hiring tool that sends résumés
 to a third-party cloud raises real privacy concerns. MANTHAN avoids that entirely.
+
+**Cloud mode** (Gemini free tier) is available for demos on Hugging Face Spaces.
 
 ---
 
@@ -85,7 +97,7 @@ Job Description (raw text)
         │
         ▼
 ┌──────────────────────────────┐
-│  Stage 1 · JD Intelligence   │  Local Llama reads the JD → required skills,
+│  Stage 1 · JD Intelligence   │  Local LLM reads the JD → required skills,
 │  (jd_parser.py)              │  implied skills, seniority, latent needs
 └─────────────┬────────────────┘
               │ structured JSON
@@ -104,7 +116,7 @@ Job Description (raw text)
               │ ranked top-50
               ▼
 ┌──────────────────────────────┐
-│  Stage 4 · Honest Rerank     │  Local Llama reads each profile + JD.
+│  Stage 4 · Honest Rerank     │  Local LLM reads each profile + JD.
 │  (rerank.py)                 │  Scores fit. Writes a reason using REAL
 └─────────────┬────────────────┘  text. If proof is weak, it says so.
               │ scored + explained
@@ -118,8 +130,36 @@ Job Description (raw text)
 ### The "Hidden Gem" Flag
 
 A candidate is flagged as a hidden gem when their composite score lands in the
-top tier but their profile is sparse or their title doesn't signal seniority.
-These are the candidates a keyword filter would have dropped. MANTHAN surfaces them.
+top tier but their embedding (raw semantic similarity) ranked them lower. These
+are the candidates a keyword filter would have dropped — MANTHAN surfaces them.
+
+---
+
+## Trust Features
+
+### PII Firewall
+All identity fields (name, email, phone, gender, age, location, nationality,
+photo, address) are stripped from every profile **before** scoring or LLM rerank.
+Enabled by default. Ranking is based on skills and evidence alone.
+
+Toggle: `MANTHAN_PII_FIREWALL=off` to disable (not recommended).
+
+### Citation Grounding
+The LLM must provide verbatim snippets from the profile as evidence for its score.
+A deterministic verifier checks each snippet against the actual profile text.
+If a citation is not found, confidence is automatically downgraded and the
+snippet is flagged as `evidence_unsupported`.
+
+### Keyword-Stuffing Detector
+Skills listed in structured fields but never mentioned in narrative prose are
+flagged as `claimed_unsupported`. A penalty (default 30%) is applied to
+`skill_score` — honest discounting, not disqualification.
+
+### Full Audit Trail
+Every pipeline run appends to `data/audit.jsonl`. Each record contains the
+run ID (SHA-256 hash of JD + model + weights), all scores, evidence, and the
+model used. The same inputs always produce the same run ID — reproducibility
+is provable.
 
 ---
 
@@ -128,12 +168,12 @@ These are the candidates a keyword filter would have dropped. MANTHAN surfaces t
 | Layer | Tool | Cost |
 |---|---|---|
 | Embeddings | `sentence-transformers` | Free, local |
-| Fast search | `FAISS` | Free, local |
+| Fast search | `FAISS` (`faiss-cpu`) | Free, local |
 | Scoring/fusion | `scikit-learn` | Free, local |
 | Language model | `Ollama` + Llama 3.2 | Free, local |
 | LLM framework | `LangChain` | Free |
+| Cloud fallback | `langchain-google-genai` (Gemini) | Free tier |
 | Demo UI | `Streamlit` | Free |
-| Optional fallback | Gemini free tier | Free (cloud) |
 
 ---
 
@@ -141,42 +181,99 @@ These are the candidates a keyword filter would have dropped. MANTHAN surfaces t
 
 ```
 manthan/
-  data/            ← dataset (not committed; add your files here)
+  app.py              ← Streamlit entry-point (HF Spaces + local)
+  data/
+    job_description.txt      ← sample JD
+    sample_candidates.json   ← 15 demo profiles (no real PII)
+    ranked_output.json       ← submission: full scored output
+    ranked_output.csv        ← submission: CSV shortlist
   src/
-    llm.py         ← model provider (swap Ollama ↔ Gemini here only)
-    agent.py       ← Pillar 4 orchestrator
-    jd_parser.py   ← Stage 1: JD Intelligence
-    recall.py      ← Stage 2: Fast Recall
-    scoring.py     ← Stage 3: Multi-signal Scoring
-    rerank.py      ← Stage 4: Honest Rerank
-    output.py      ← Stage 5: Output Writer
-    demo.py        ← Streamlit demo UI
-  README.md
+    llm.py            ← model provider (swap Ollama ↔ Gemini here only)
+    agent.py          ← Pillar 4 orchestrator
+    data_loader.py    ← flexible .json/.csv loader with column normalisation
+    jd_parser.py      ← Stage 1: JD Intelligence
+    recall.py         ← Stage 2: Fast Recall
+    scoring.py        ← Stage 3: Multi-signal Scoring + stuffing detector
+    rerank.py         ← Stage 4: Honest Rerank + citation grounding
+    output.py         ← Stage 5: Output Writer + validate_output()
+    pii.py            ← PII Firewall
+    audit.py          ← Audit trail
+    config.py         ← All constants and env-var defaults
+    skills.py         ← Skill synonyms (Spark = PySpark = Apache Spark)
+    demo.py           ← Full Streamlit demo UI
+  tests/              ← 158 tests, all passing
   requirements.txt
   CLAUDE.md
 ```
 
 ---
 
-## Setup
+## How to Run
+
+### Local — Ollama (free, offline, private)
 
 ```bash
-# 1. Install Ollama (one-time)
-#    https://ollama.com — download and install for your OS
+# 1. Install Ollama: https://ollama.com
 
-# 2. Pull the model (one-time, ~2 GB)
+# 2. Pull the model (~4 GB, one-time)
 ollama pull llama3.2
 
-# 3. Start the local model server (keep this running)
+# 3. Keep Ollama server running
 ollama serve
 
 # 4. Install Python dependencies
 pip install -r requirements.txt
 
-# 5. (Optional) change the model without editing code
-$env:MANTHAN_MODEL = "llama3.1"   # PowerShell
-export MANTHAN_MODEL=llama3.1     # bash
+# 5. Run the pipeline (CLI)
+python src/agent.py
+
+# 6. Or run the Streamlit demo
+streamlit run app.py
 ```
+
+You can swap to a smaller/faster model without editing code:
+
+```bash
+# PowerShell
+$env:MANTHAN_MODEL = "phi3:mini"
+# bash
+export MANTHAN_MODEL=phi3:mini
+```
+
+### Cloud Demo — Gemini (Hugging Face Spaces)
+
+```bash
+# Set your free Gemini key (https://aistudio.google.com)
+$env:LLM_PROVIDER = "gemini"
+$env:GOOGLE_API_KEY = "AIza..."
+streamlit run app.py
+```
+
+### With Your Own Dataset
+
+Drop your candidate file into `data/` as `profiles.json` or `profiles.csv`.
+The loader auto-detects column names and normalises variants
+(`headline`→`title`, `about`→`summary`, `tech_skills`→`skills`, etc.).
+
+Then run: `python src/agent.py`
+
+---
+
+## Results
+
+The pipeline was run on `data/sample_candidates.json` (15 realistic profiles
+for a Senior Data Engineer role). Full output:
+
+- `data/ranked_output.json` — complete scored shortlist with evidence, stuffing
+  analysis, counterfactual explainers, and audit metadata
+- `data/ranked_output.csv`  — CSV shortlist in submission format
+
+**Validation:** all 4 checks PASS — sequential ranks, no null scores,
+sorted correctly, all reasons non-empty.
+
+Hidden gems detected: candidates with modest titles (Analytics Associate,
+Data Support Specialist) who demonstrated strong pipeline engineering in their
+experience text were surfaced above higher-titled candidates with weaker evidence.
 
 ---
 
@@ -184,8 +281,8 @@ export MANTHAN_MODEL=llama3.1     # bash
 
 We are not faking pillars 1–3. We describe them as the honest roadmap they are.
 
-We are not inventing performance numbers. Every claim in this system is backed by
-observable outputs from the running pipeline.
+We are not inventing performance numbers. Every claim is backed by observable
+outputs from the running pipeline.
 
 We are not sending candidate data to the cloud. The local model is the feature,
 not the compromise.

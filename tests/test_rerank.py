@@ -37,8 +37,10 @@ PARSED_JD = {
     "latent_needs":    ["owns pipelines end-to-end"],
 }
 
-GOOD_LLM_RESPONSE = '{"analysis": "Candidate has all required skills.", "llm_score": 9, "reason": "Direct match on Spark, Airflow, and AWS.", "confidence": "high"}'
-LOW_CONF_RESPONSE  = '{"analysis": "Limited profile info.", "llm_score": 5, "reason": "Limited evidence: sparse profile.", "confidence": "low"}'
+GOOD_LLM_RESPONSE = '{"analysis": "Candidate has all required skills.", "llm_score": 9, "reason": "Direct match on Spark, Airflow, and AWS.", "confidence": "high", "evidence": ["8 years building data pipelines on AWS"]}'
+LOW_CONF_RESPONSE  = '{"analysis": "Limited profile info.", "llm_score": 5, "reason": "Limited evidence: sparse profile.", "confidence": "low", "evidence": []}'
+# Evidence that doesn't appear in the candidate profile — should be flagged
+HALLUCINATED_EVIDENCE_RESPONSE = '{"llm_score": 8, "reason": "Has 15 years experience.", "confidence": "high", "evidence": ["8 years building data pipelines on AWS", "invented text that is not in profile at all"]}'
 
 
 def _mock_chain_from_response(text: str):
@@ -65,7 +67,7 @@ def _patch_rerank(monkeypatch, response_text: str):
     mock_cpt.from_messages.return_value = mock_prompt
 
     monkeypatch.setattr(rerank, "ChatPromptTemplate", mock_cpt)
-    monkeypatch.setattr(rerank, "get_llm", lambda: MagicMock())
+    monkeypatch.setattr(rerank, "get_llm", lambda **kw: MagicMock())
 
 
 # ---------------------------------------------------------------------------
@@ -79,6 +81,17 @@ class TestParseResult:
         assert result["llm_score"] == 9
         assert result["confidence"] == "high"
         assert "Spark" in result["reason"]
+
+    def test_evidence_parsed(self):
+        from rerank import _parse_result
+        result = _parse_result(GOOD_LLM_RESPONSE)
+        assert "evidence" in result
+        assert isinstance(result["evidence"], list)
+
+    def test_evidence_defaults_to_empty_list(self):
+        from rerank import _parse_result
+        result = _parse_result('{"llm_score": 7, "reason": "ok", "confidence": "medium"}')
+        assert result["evidence"] == []
 
     def test_score_clamped_to_1_10(self):
         from rerank import _parse_result
@@ -187,3 +200,110 @@ class TestRerankedOutput:
             assert "llm_score" in c
             assert "reason" in c
             assert "confidence" in c
+
+    def test_evidence_verified_and_unsupported_present(self, monkeypatch):
+        _patch_rerank(monkeypatch, GOOD_LLM_RESPONSE)
+        from rerank import rerank_candidates
+        results = rerank_candidates(CANDIDATES, PARSED_JD, top_n=2)
+        for c in results:
+            assert "evidence_verified" in c
+            assert "evidence_unsupported" in c
+
+    def test_calibrated_confidence_present(self, monkeypatch):
+        _patch_rerank(monkeypatch, GOOD_LLM_RESPONSE)
+        from rerank import rerank_candidates
+        results = rerank_candidates(CANDIDATES, PARSED_JD, top_n=2)
+        for c in results:
+            assert "calibrated_confidence" in c
+            assert 0.0 <= c["calibrated_confidence"] <= 1.0
+
+
+class TestCitationGrounding:
+    """Verify the evidence verifier catches hallucinated citations."""
+
+    def test_real_snippet_lands_in_verified(self):
+        from rerank import verify_evidence
+        profile_text = "8 years building data pipelines on AWS. Expert in Python."
+        evidence = ["8 years building data pipelines on AWS"]
+        verified, unsupported = verify_evidence(evidence, profile_text)
+        assert "8 years building data pipelines on AWS" in verified
+        assert unsupported == []
+
+    def test_fake_snippet_lands_in_unsupported(self):
+        from rerank import verify_evidence
+        profile_text = "8 years building data pipelines on AWS. Expert in Python."
+        evidence = ["invented text that is not in profile at all"]
+        verified, unsupported = verify_evidence(evidence, profile_text)
+        assert unsupported == ["invented text that is not in profile at all"]
+        assert verified == []
+
+    def test_mixed_evidence_split_correctly(self):
+        from rerank import verify_evidence
+        profile_text = "8 years building data pipelines on AWS."
+        evidence = ["8 years building data pipelines on AWS", "hallucinated fact"]
+        verified, unsupported = verify_evidence(evidence, profile_text)
+        assert len(verified) == 1
+        assert len(unsupported) == 1
+
+    def test_confidence_downgraded_on_unsupported(self, monkeypatch):
+        """When the model returns hallucinated evidence, confidence must drop."""
+        _patch_rerank(monkeypatch, HALLUCINATED_EVIDENCE_RESPONSE)
+        from rerank import rerank_candidates
+        # C001 profile text: "8 years building data pipelines on AWS"
+        # Evidence includes one real + one fake snippet → confidence downgraded
+        results = rerank_candidates(CANDIDATES, PARSED_JD, top_n=1, parallel=False)
+        c = results[0]
+        # Original confidence was "high"; unsupported evidence → "medium"
+        assert c["confidence"] in ("medium", "low")
+        assert len(c["evidence_unsupported"]) > 0
+
+    def test_empty_evidence_no_confidence_change(self, monkeypatch):
+        """Empty evidence array → verifier runs but doesn't downgrade confidence."""
+        _patch_rerank(monkeypatch, LOW_CONF_RESPONSE)
+        from rerank import rerank_candidates
+        results = rerank_candidates(CANDIDATES, PARSED_JD, top_n=1, parallel=False)
+        c = results[0]
+        assert c["confidence"] == "low"   # unchanged — was already low
+
+
+class TestCalibratedConfidence:
+    def test_high_conf_all_verified_near_1(self):
+        from rerank import calibrate_confidence
+        score = calibrate_confidence("high", ["real text"], [], 9)
+        assert score > 0.7
+
+    def test_low_conf_no_evidence_near_0(self):
+        from rerank import calibrate_confidence
+        score = calibrate_confidence("low", [], [], 5)
+        assert score < 0.5
+
+    def test_high_conf_with_unsupported_lower_than_fully_verified(self):
+        from rerank import calibrate_confidence
+        verified   = calibrate_confidence("high", ["text"], [],       9)
+        unsupported = calibrate_confidence("high", [],       ["fake"], 9)
+        assert verified > unsupported
+
+    def test_output_clamped_0_to_1(self):
+        from rerank import calibrate_confidence
+        for label in ("high", "medium", "low"):
+            for llm in (1, 5, 10):
+                score = calibrate_confidence(label, [], [], llm)
+                assert 0.0 <= score <= 1.0
+
+
+class TestGracefulDegradation:
+    def test_fallback_on_llm_failure(self, monkeypatch):
+        """If the LLM is down, rerank_candidates returns composite-ordered results."""
+        import rerank
+
+        def _boom(*a, **kw):
+            raise ConnectionError("Ollama is not running")
+
+        monkeypatch.setattr(rerank, "rerank_stream_parallel", _boom)
+        monkeypatch.setattr(rerank, "rerank_stream", _boom)
+
+        results = rerank.rerank_candidates(CANDIDATES, PARSED_JD, top_n=2, parallel=True)
+        assert len(results) == 2
+        for c in results:
+            assert c["llm_unavailable"] is True
+            assert c["final_score"] == c["composite_score"]

@@ -1,35 +1,38 @@
 # Local LLM (default — free, offline, private)
-langchain
-langchain-ollama
-langchain-community
+langchain>=0.3,<0.4
+langchain-core>=0.3,<0.4
+langchain-ollama>=0.2,<0.4
+langchain-community>=0.3,<0.4
 
 # Optional cloud fallback
-langchain-google-genai
+langchain-google-genai>=2.0,<3.0
 
 # Embeddings + vector search (all local)
-sentence-transformers
-faiss-cpu
+sentence-transformers>=3.0,<4.0
+faiss-cpu>=1.7,<2.0
 
 # Scoring
-scikit-learn
-numpy
-pandas
+scikit-learn>=1.4,<2.0
+numpy>=1.26,<3.0
+pandas>=2.1,<3.0
 
 # UI
-streamlit
-plotly
+streamlit>=1.40,<2.0
+plotly>=5.20,<6.0
 
 # Terminal output
-rich
+rich>=13.0,<15.0
 
 # REST API
-fastapi
-uvicorn[standard]
+fastapi>=0.115,<0.116
+uvicorn[standard]>=0.30,<0.35
+pydantic>=2.0,<3.0
 
 # Testing
-pytest
-httpx
+pytest>=8.0,<9.0
+httpx>=0.27,<0.29
 
 # Utilities
-python-dotenv
-tqdm
+python-dotenv>=1.0,<2.0
+tqdm>=4.66,<5.0
+requests>=2.31,<3.0

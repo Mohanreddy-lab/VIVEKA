@@ -57,14 +57,14 @@ def _patch_llms(monkeypatch):
     jd_chain.invoke.return_value = MagicMock(content=JD_PARSE_RESPONSE)
     jd_prompt = MagicMock()
     jd_prompt.__or__ = MagicMock(return_value=jd_chain)
-    monkeypatch.setattr(jd_parser, "get_llm", lambda: jd_llm)
+    monkeypatch.setattr(jd_parser, "get_llm", lambda **kw: jd_llm)
 
     # rerank: always returns rerank response
     rr_chain = MagicMock()
     rr_chain.invoke.return_value = MagicMock(content=RERANK_RESPONSE)
     rr_prompt = MagicMock()
     rr_prompt.__or__ = MagicMock(return_value=rr_chain)
-    monkeypatch.setattr(rerank, "get_llm", lambda: MagicMock())
+    monkeypatch.setattr(rerank, "get_llm", lambda **kw: MagicMock())
 
     # Patch ChatPromptTemplate globally — used by both modules
     mock_cpt = MagicMock()

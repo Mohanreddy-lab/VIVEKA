@@ -59,8 +59,26 @@ BLEND_COMPOSITE = float(os.getenv("MANTHAN_BLEND_COMPOSITE", 0.5))
 BLEND_LLM       = float(os.getenv("MANTHAN_BLEND_LLM",       0.5))
 
 # ---------------------------------------------------------------------------
+# Keyword-stuffing detector
+# ---------------------------------------------------------------------------
+
+# Penalty multiplier when stuffing_ratio > 0. Set to 0 to disable.
+STUFFING_PENALTY: float = float(os.getenv("MANTHAN_STUFFING_PENALTY", 0.30))
+
+# ---------------------------------------------------------------------------
 # Field name priority lists  (shared by recall, scoring, rerank, output)
 # ---------------------------------------------------------------------------
+
+# Structured fields where skills are explicitly listed (not described in prose)
+LISTED_SKILL_FIELDS: list[str] = [
+    "skills", "tech_skills", "tools", "certifications", "technologies",
+]
+
+# Narrative fields where skills appear in context (used by stuffing detector)
+NARRATIVE_FIELDS: list[str] = [
+    "summary", "bio", "about", "experience", "work_history",
+    "description", "overview", "responsibilities", "achievements",
+]
 
 SKILL_FIELDS: list[str] = [
     "skills", "tech_skills", "tools", "certifications",

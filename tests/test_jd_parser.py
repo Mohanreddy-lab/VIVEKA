@@ -35,7 +35,7 @@ def _patch_jd_parser(monkeypatch, response_text: str):
     mock_cpt.from_messages.return_value = mock_prompt
 
     monkeypatch.setattr(jd_parser, "ChatPromptTemplate", mock_cpt)
-    monkeypatch.setattr(jd_parser, "get_llm", lambda: MagicMock())
+    monkeypatch.setattr(jd_parser, "get_llm", lambda **kw: MagicMock())
 
 
 # ---------------------------------------------------------------------------

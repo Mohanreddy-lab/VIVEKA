@@ -12,12 +12,15 @@ Runs fully offline — no API key, no internet required.
 """
 
 import json
+import logging
 import sys
 import os
 
 sys.path.insert(0, os.path.dirname(__file__))
 
 from llm import get_llm
+
+log = logging.getLogger("manthan.jd_parser")
 from utils import safe_parse_json, as_list
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -59,7 +62,7 @@ def parse_jd(jd_text: str) -> dict:
     Returns dict with keys: required_skills, implied_skills, seniority, latent_needs.
     All keys are always present — empty lists / "unknown" on parse failure.
     """
-    llm = get_llm()
+    llm = get_llm(json_mode=True)
     prompt = ChatPromptTemplate.from_messages([
         ("system", SYSTEM_PROMPT),
         ("human",  USER_TEMPLATE),
@@ -71,7 +74,7 @@ def parse_jd(jd_text: str) -> dict:
     data = safe_parse_json(response.content, fallback)
 
     if data is fallback:
-        print(f"[jd_parser] Warning: could not parse LLM output. Raw:\n{response.content[:300]}")
+        log.warning("Could not parse LLM output. Raw:\n%s", response.content[:300])
 
     return {
         "required_skills": as_list(data.get("required_skills")),
