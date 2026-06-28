@@ -3,9 +3,10 @@
 # Every other module calls get_llm() — never imports a model directly.
 #
 # Environment variables:
-#   LLM_PROVIDER    "ollama" (default) | "gemini"
-#   VIVEKA_MODEL    Ollama model name  (default: "llama3.2")
+#   LLM_PROVIDER    "ollama" (default) | "gemini" | "huggingface"
+#   VIVEKA_MODEL    model name — defaults per provider below
 #   GOOGLE_API_KEY  required when LLM_PROVIDER=gemini
+#   HF_TOKEN        auto-set on HF Spaces; optional elsewhere for higher rate limits
 
 import os
 import logging
@@ -15,22 +16,20 @@ load_dotenv()
 
 log = logging.getLogger("viveka.llm")
 
-DEFAULT_MODEL  = "llama3.2"
-DEFAULT_HOST   = "http://localhost:11434"
+DEFAULT_MODEL     = "llama3.2"
+DEFAULT_HOST      = "http://localhost:11434"
+DEFAULT_HF_MODEL  = "Qwen/Qwen2.5-72B-Instruct"
 
 
 def get_llm(json_mode: bool = False):
     """Return a configured LangChain chat model.
 
-    Default: Ollama running llama3.2 locally — free, offline, private.
-    json_mode=True forces JSON output (Ollama only) — prevents small models
-    from outputting markdown or prose instead of JSON.
+    Providers (set LLM_PROVIDER env var):
+      ollama       — local Llama 3.2 via Ollama (free, offline, default)
+      gemini       — Google Gemini API (free tier, needs GOOGLE_API_KEY)
+      huggingface  — HF Inference API (free, HF_TOKEN auto-set on HF Spaces)
 
-    Env vars:
-      VIVEKA_MODEL    — model name (default: llama3.2)
-      OLLAMA_HOST     — Ollama server URL (default: http://localhost:11434)
-      LLM_PROVIDER    — "ollama" (default) | "gemini"
-      GOOGLE_API_KEY  — required when LLM_PROVIDER=gemini
+    json_mode=True forces JSON output (Ollama only).
     """
     provider = os.getenv("LLM_PROVIDER", "ollama").lower()
 
@@ -55,7 +54,25 @@ def get_llm(json_mode: bool = False):
         log.info("Gemini model=%s", model)
         return ChatGoogleGenerativeAI(model=model, temperature=0, google_api_key=api_key)
 
-    raise ValueError(f"Unknown LLM_PROVIDER: '{provider}'. Use 'ollama' or 'gemini'.")
+    if provider == "huggingface":
+        from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
+        # HF_TOKEN is automatically injected by HF Spaces — no manual setup needed.
+        hf_token = os.getenv("HF_TOKEN") or os.getenv("HUGGINGFACE_API_TOKEN", "")
+        model = os.getenv("VIVEKA_MODEL", DEFAULT_HF_MODEL)
+        log.info("HuggingFace Inference API model=%s", model)
+        endpoint = HuggingFaceEndpoint(
+            repo_id=model,
+            task="text-generation",
+            huggingfacehub_api_token=hf_token,
+            temperature=0.1,
+            max_new_tokens=512,
+            do_sample=False,
+        )
+        return ChatHuggingFace(llm=endpoint, verbose=False)
+
+    raise ValueError(
+        f"Unknown LLM_PROVIDER: '{provider}'. Use 'ollama', 'gemini', or 'huggingface'."
+    )
 
 
 def check_ollama() -> tuple[bool, str]:

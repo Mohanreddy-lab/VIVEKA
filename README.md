@@ -3,7 +3,7 @@ title: VIVEKA
 emoji: 🔍
 colorFrom: blue
 colorTo: purple
-sdk: streamlit
+sdk: gradio
 app_file: app.py
 pinned: false
 ---
