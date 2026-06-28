@@ -14,10 +14,18 @@ import os
 import sys
 from typing import List, Dict
 
-from sentence_transformers import SentenceTransformer
 import faiss
+import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
+
+# sentence-transformers is optional: conflicts with gradio 6 on HF Spaces.
+# Fall back to HF Inference API (huggingface_hub.InferenceClient) when unavailable.
+try:
+    from sentence_transformers import SentenceTransformer as _ST
+    _HAS_ST = True
+except ImportError:
+    _HAS_ST = False
 
 DEFAULT_EMBED_MODEL = "all-MiniLM-L6-v2"
 
@@ -77,17 +85,51 @@ def build_profile_text(profile: dict) -> str:
 
 class RecallEngine:
     """
-    Wraps sentence-transformers + FAISS.
-    Call index_candidates() once when the dataset loads,
-    then call recall() for each JD query.
+    Wraps embeddings + FAISS for fast semantic recall.
+
+    Embedding backend (auto-selected):
+      • sentence-transformers (local, if installed)
+      • HF Inference API via huggingface_hub.InferenceClient (cloud fallback)
     """
 
     def __init__(self, model_name: str = None):
         model_name = model_name or os.getenv("VIVEKA_EMBED_MODEL", DEFAULT_EMBED_MODEL)
-        print(f"[recall] Loading embedding model: {model_name}")
-        self.model = SentenceTransformer(model_name)
+        self._model_name = model_name
         self.index = None
         self.candidates: List[Dict] = []
+
+        if _HAS_ST:
+            print(f"[recall] Loading local embedding model: {model_name}")
+            self._st = _ST(model_name)
+        else:
+            hf_model = (
+                model_name if "/" in model_name
+                else f"sentence-transformers/{model_name}"
+            )
+            self._hf_model = hf_model
+            self._hf_token = os.getenv("HF_TOKEN") or os.getenv("HUGGINGFACE_API_TOKEN", "")
+            print(f"[recall] Using HF Inference API for embeddings: {hf_model}")
+
+    def _encode(self, texts: List[str]) -> "np.ndarray":
+        """Embed texts and return L2-normalised float32 array."""
+        if _HAS_ST:
+            return self._st.encode(
+                texts, batch_size=64, show_progress_bar=False,
+                normalize_embeddings=True,
+            ).astype("float32")
+
+        from huggingface_hub import InferenceClient
+        client = InferenceClient(token=self._hf_token or None)
+        vecs = []
+        for text in texts:
+            emb = client.feature_extraction(text, model=self._hf_model)
+            # InferenceClient returns list or ndarray; flatten to 1-D
+            arr = np.array(emb, dtype="float32").flatten()
+            vecs.append(arr)
+        mat = np.stack(vecs).astype("float32")
+        norms = np.linalg.norm(mat, axis=1, keepdims=True)
+        mat /= np.maximum(norms, 1e-10)
+        return mat
 
     def index_candidates(self, profiles: List[Dict]) -> None:
         """Embed all profiles and build the FAISS index."""
@@ -98,12 +140,7 @@ class RecallEngine:
         texts = [build_profile_text(p) for p in profiles]
 
         print(f"[recall] Embedding {len(texts)} profiles...")
-        embeddings = self.model.encode(
-            texts,
-            batch_size=64,
-            show_progress_bar=True,
-            normalize_embeddings=True,
-        ).astype("float32")
+        embeddings = self._encode(texts)
 
         dim = embeddings.shape[1]
         self.index = faiss.IndexFlatIP(dim)
@@ -120,7 +157,7 @@ class RecallEngine:
             raise RuntimeError("Call index_candidates() before recall().")
 
         jd_text = build_jd_text(parsed_jd)
-        jd_vec  = self.model.encode([jd_text], normalize_embeddings=True).astype("float32")
+        jd_vec  = self._encode([jd_text])
 
         k = min(top_k, len(self.candidates))
         scores, indices = self.index.search(jd_vec, k)

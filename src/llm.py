@@ -55,24 +55,62 @@ def get_llm(json_mode: bool = False):
         return ChatGoogleGenerativeAI(model=model, temperature=0, google_api_key=api_key)
 
     if provider == "huggingface":
-        from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
-        # HF_TOKEN is automatically injected by HF Spaces — no manual setup needed.
-        hf_token = os.getenv("HF_TOKEN") or os.getenv("HUGGINGFACE_API_TOKEN", "")
-        model = os.getenv("VIVEKA_MODEL", DEFAULT_HF_MODEL)
-        log.info("HuggingFace Inference API model=%s", model)
-        endpoint = HuggingFaceEndpoint(
-            repo_id=model,
-            task="text-generation",
-            huggingfacehub_api_token=hf_token,
-            temperature=0.1,
-            max_new_tokens=512,
-            do_sample=False,
+        # Uses huggingface_hub.InferenceClient — no transformers/langchain-huggingface needed.
+        # HF_TOKEN is auto-injected by HF Spaces; works without a token on public models.
+        return _HFInferenceChat(
+            model_id=os.getenv("VIVEKA_MODEL", DEFAULT_HF_MODEL),
+            hf_token=os.getenv("HF_TOKEN") or os.getenv("HUGGINGFACE_API_TOKEN", ""),
         )
-        return ChatHuggingFace(llm=endpoint, verbose=False)
 
     raise ValueError(
         f"Unknown LLM_PROVIDER: '{provider}'. Use 'ollama', 'gemini', or 'huggingface'."
     )
+
+
+# ---------------------------------------------------------------------------
+# Minimal LangChain-compatible chat model backed by HF Inference API
+# Avoids langchain-huggingface (and its transformers dep) entirely.
+# ---------------------------------------------------------------------------
+
+from langchain_core.language_models.chat_models import BaseChatModel  # noqa: E402
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage  # noqa: E402
+from langchain_core.outputs import ChatGeneration, ChatResult  # noqa: E402
+from pydantic import Field  # noqa: E402
+
+
+class _HFInferenceChat(BaseChatModel):
+    """LangChain ChatModel backed by huggingface_hub.InferenceClient (chat completions)."""
+
+    model_id: str = Field(default=DEFAULT_HF_MODEL)
+    hf_token: str = Field(default="")
+
+    def _generate(self, messages, stop=None, run_manager=None, **kwargs):
+        from huggingface_hub import InferenceClient
+        client = InferenceClient(token=self.hf_token or None)
+
+        hf_msgs = []
+        for m in messages:
+            if isinstance(m, SystemMessage):
+                hf_msgs.append({"role": "system",    "content": m.content})
+            elif isinstance(m, HumanMessage):
+                hf_msgs.append({"role": "user",      "content": m.content})
+            elif isinstance(m, AIMessage):
+                hf_msgs.append({"role": "assistant", "content": m.content})
+
+        resp = client.chat_completions(
+            model=self.model_id,
+            messages=hf_msgs,
+            max_tokens=512,
+            temperature=0.1,
+        )
+        content = resp.choices[0].message.content or ""
+        log.info("HFInferenceChat model=%s tokens=%s", self.model_id,
+                 getattr(resp, "usage", {}) and resp.usage.total_tokens)
+        return ChatResult(generations=[ChatGeneration(message=AIMessage(content=content))])
+
+    @property
+    def _llm_type(self) -> str:
+        return "hf_inference_chat"
 
 
 def check_ollama() -> tuple[bool, str]:

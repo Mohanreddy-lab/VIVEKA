@@ -6,10 +6,12 @@ langchain-community>=0.3,<0.4
 
 # Cloud LLM providers (both optional — only one is used at runtime)
 langchain-google-genai>=2.0,<3.0
-langchain-huggingface>=0.1,<0.3
+# langchain-huggingface omitted: pulls transformers<5 which conflicts with gradio 6 (huggingface-hub>=1.2)
+# sentence-transformers omitted: same transitive conflict via transformers<5
+# On HF Spaces, embeddings + LLM use huggingface_hub.InferenceClient (already a gradio dep)
+# Locally, install sentence-transformers manually for offline embeddings
 
-# Embeddings + vector search (all local)
-sentence-transformers>=3.0,<4.0
+# Vector search
 faiss-cpu>=1.7,<2.0
 
 # Scoring
