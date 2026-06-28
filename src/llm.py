@@ -25,13 +25,16 @@ def get_llm(json_mode: bool = False):
     """Return a configured LangChain chat model.
 
     Providers (set LLM_PROVIDER env var):
-      ollama       — local Llama 3.2 via Ollama (free, offline, default)
+      huggingface  — HF Inference API (free, HF_TOKEN auto-set on HF Spaces) [default on Spaces]
+      ollama       — local Llama 3.2 via Ollama (free, offline) [default locally]
       gemini       — Google Gemini API (free tier, needs GOOGLE_API_KEY)
-      huggingface  — HF Inference API (free, HF_TOKEN auto-set on HF Spaces)
 
     json_mode=True forces JSON output (Ollama only).
     """
-    provider = os.getenv("LLM_PROVIDER", "ollama").lower()
+    # Auto-detect HF Spaces via SPACE_ID so no manual variable setup is needed.
+    _on_spaces   = bool(os.getenv("SPACE_ID"))
+    _default     = "huggingface" if _on_spaces else "ollama"
+    provider     = os.getenv("LLM_PROVIDER", _default).lower()
 
     if provider == "ollama":
         from langchain_ollama import ChatOllama
