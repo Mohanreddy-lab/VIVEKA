@@ -50,12 +50,17 @@ def get_llm(json_mode: bool = False):
         from langchain_google_genai import ChatGoogleGenerativeAI
         api_key = os.getenv("GOOGLE_API_KEY")
         if not api_key:
-            raise EnvironmentError(
-                "GOOGLE_API_KEY not set. Add it to your .env file or environment."
-            )
-        model = os.getenv("VIVEKA_MODEL", "gemini-1.5-flash")
-        log.info("Gemini model=%s", model)
-        return ChatGoogleGenerativeAI(model=model, temperature=0, google_api_key=api_key)
+            if _on_spaces:
+                log.warning("LLM_PROVIDER=gemini but GOOGLE_API_KEY not set — falling back to huggingface")
+                provider = "huggingface"
+            else:
+                raise EnvironmentError(
+                    "GOOGLE_API_KEY not set. Add it to your .env file or environment."
+                )
+        else:
+            model = os.getenv("VIVEKA_MODEL", "gemini-1.5-flash")
+            log.info("Gemini model=%s", model)
+            return ChatGoogleGenerativeAI(model=model, temperature=0, google_api_key=api_key)
 
     if provider == "huggingface":
         # Uses huggingface_hub.InferenceClient — no transformers/langchain-huggingface needed.
