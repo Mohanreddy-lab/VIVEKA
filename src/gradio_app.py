@@ -609,9 +609,9 @@ with gr.Blocks(
     css=CSS,
     title="VIVEKA — Intelligent Candidate Ranking",
     theme=gr.themes.Base(
-        primary_hue=gr.themes.colors.purple,
-        secondary_hue=gr.themes.colors.blue,
-        neutral_hue=gr.themes.colors.slate,
+        primary_hue="purple",
+        secondary_hue="blue",
+        neutral_hue="slate",
         font=gr.themes.GoogleFont("Inter"),
     ),
 ) as demo:
