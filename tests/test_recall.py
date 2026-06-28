@@ -1,6 +1,7 @@
 """Tests for src/recall.py — text builders and FAISS index."""
 
-import sys, os
+import sys
+import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from recall import build_jd_text, build_profile_text, RecallEngine

@@ -1,6 +1,7 @@
 """Tests for src/pii.py — PII firewall."""
 
-import sys, os
+import sys
+import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from pii import redact_profile, is_firewall_on

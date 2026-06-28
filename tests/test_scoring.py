@@ -1,7 +1,8 @@
 """Tests for src/scoring.py — skill matching, activity scoring, composite scoring,
 stuffing detection, and counterfactual explainer."""
 
-import sys, os
+import sys
+import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from scoring import (
@@ -255,7 +256,6 @@ class TestStuffingDetector:
             "embedding_score": 0.70,
         }
         results = score_candidates([stuffed, genuine], self.PARSED_JD, top_n=2)
-        s_scores = {c["id"]: c["skill_score"] for c in results}
         # Stuffed candidate's skill_score should be discounted relative to raw
         stuffed_r = next(c for c in results if c["id"] == "S1")
         assert stuffed_r["skill_score"] < stuffed_r["skill_score_raw"]

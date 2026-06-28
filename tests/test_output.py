@@ -1,10 +1,11 @@
 """Tests for src/output.py — CSV/JSON writing and console summary."""
 
-import sys, os, json, csv
-from pathlib import Path
+import sys
+import os
+import json
+import csv
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-import pytest
 from output import _to_row, write_output, print_summary, _get_id
 
 SAMPLE_RANKED = [

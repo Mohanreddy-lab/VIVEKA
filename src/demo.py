@@ -27,8 +27,13 @@ import streamlit as st
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from agent  import load_profiles
-from output import normalize_scores
+from output import normalize_scores  # noqa: E402
+
+# ---------------------------------------------------------------------------
+# Paths (defined early — used in sidebar upload handler and later sections)
+# ---------------------------------------------------------------------------
+
+data_dir = Path(__file__).parent.parent / "data"
 
 # ---------------------------------------------------------------------------
 # Page config
@@ -158,7 +163,6 @@ with st.sidebar:
 # Candidate data source
 # ---------------------------------------------------------------------------
 
-data_dir  = Path(__file__).parent.parent / "data"
 json_path = data_dir / "profiles.json"
 csv_path  = data_dir / "profiles.csv"
 
@@ -446,7 +450,8 @@ def _show_skill_gap(ranked: list, parsed_jd: dict) -> None:
         rows.append(row)
 
     df = pd.DataFrame(rows)
-    style_fn = lambda v: "background-color: #1a4a1a" if v == "✅" else "background-color: #4a1a1a"
+    def style_fn(v):
+        return "background-color: #1a4a1a" if v == "✅" else "background-color: #4a1a1a"
     value_cols = [c for c in df.columns if c not in ("Skill", "Type")]
     try:
         styled = df.style.map(style_fn, subset=value_cols)

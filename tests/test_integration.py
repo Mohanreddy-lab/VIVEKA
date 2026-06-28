@@ -5,11 +5,12 @@ Tests the full flow: JD text → parse → recall → score → rerank → outpu
 The LLM (jd_parser + rerank) is mocked so no Ollama server is required.
 """
 
-import sys, os, json, csv
+import sys
+import os
+import json
+import csv
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-import pytest
-from pathlib import Path
 from unittest.mock import MagicMock
 
 
@@ -49,7 +50,8 @@ def _make_mock_llm(response_text: str):
 
 def _patch_llms(monkeypatch):
     """Patch get_llm and ChatPromptTemplate for both jd_parser and rerank."""
-    import jd_parser, rerank
+    import jd_parser
+    import rerank
 
     # jd_parser: always returns JD parse JSON
     jd_llm = MagicMock()
@@ -67,8 +69,6 @@ def _patch_llms(monkeypatch):
     monkeypatch.setattr(rerank, "get_llm", lambda **kw: MagicMock())
 
     # Patch ChatPromptTemplate globally — used by both modules
-    mock_cpt = MagicMock()
-
     def _from_messages(*args, **kwargs):
         caller = sys._getframe(1).f_globals.get("__name__", "")
         if "jd_parser" in caller:

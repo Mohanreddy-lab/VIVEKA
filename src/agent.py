@@ -27,15 +27,15 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 log = logging.getLogger("viveka.agent")
 
-from jd_parser   import parse_jd
-from recall      import RecallEngine
-from scoring     import score_candidates
-from rerank      import rerank_candidates
-from output      import write_output, print_summary, normalize_scores, validate_output
-from pii         import redact_profile, is_firewall_on
-from audit       import AuditLogger, is_audit_on
-from config      import get_weights
-from data_loader import load_candidates, auto_find_dataset
+from jd_parser   import parse_jd              # noqa: E402
+from recall      import RecallEngine           # noqa: E402
+from scoring     import score_candidates       # noqa: E402
+from rerank      import rerank_candidates      # noqa: E402
+from output      import write_output, print_summary, normalize_scores, validate_output  # noqa: E402
+from pii         import redact_profile, is_firewall_on  # noqa: E402
+from audit       import AuditLogger, is_audit_on        # noqa: E402
+from config      import get_weights            # noqa: E402
+from data_loader import load_candidates, auto_find_dataset  # noqa: E402
 
 
 # ---------------------------------------------------------------------------

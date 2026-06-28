@@ -21,8 +21,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 from llm import get_llm
 
 log = logging.getLogger("viveka.jd_parser")
-from utils import safe_parse_json, as_list
-from langchain_core.prompts import ChatPromptTemplate
+from utils import safe_parse_json, as_list              # noqa: E402
+from langchain_core.prompts import ChatPromptTemplate   # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Prompts

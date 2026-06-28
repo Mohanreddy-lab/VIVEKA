@@ -21,7 +21,7 @@ import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Dict, Tuple
+from typing import List, Tuple
 
 log = logging.getLogger("viveka.audit")
 

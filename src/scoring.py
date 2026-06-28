@@ -235,7 +235,6 @@ def explain_why_not_higher(
     implied  = parsed_jd.get("implied_skills",  [])
     max_score = len(required) * 1.0 + len(implied) * 0.5 or 1.0
 
-    req_hit  = len(ev.get("required_matched", []))
     impl_hit = len(ev.get("implied_matched",  []))
 
     # Hypothetical: ALL required skills present, same implied coverage
@@ -380,7 +379,8 @@ def score_candidates(
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    import sys, os
+    import sys
+    import os
     sys.path.insert(0, os.path.dirname(__file__))
 
     CANDIDATES = [

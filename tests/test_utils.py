@@ -1,6 +1,7 @@
 """Tests for src/utils.py — shared JSON parsing helpers."""
 
-import sys, os
+import sys
+import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from utils import try_json, safe_parse_json, as_list

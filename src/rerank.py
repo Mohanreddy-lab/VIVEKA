@@ -524,7 +524,6 @@ def generate_ideal_candidate(parsed_jd: dict) -> dict:
 # ---------------------------------------------------------------------------
 
 def generate_outreach_message(candidate: dict, parsed_jd: dict) -> str:
-    cfg    = _cfg()
     llm    = get_llm()
     prompt = ChatPromptTemplate.from_messages([
         ("system", OUTREACH_SYSTEM),
@@ -559,7 +558,6 @@ def generate_outreach_message(candidate: dict, parsed_jd: dict) -> str:
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    import json
     CANDIDATES = [
         {
             "id": "C001", "title": "Senior Data Engineer",
