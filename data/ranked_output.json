@@ -1,0 +1,1234 @@
+[
+  {
+    "id": "C001",
+    "title": "Senior Data Engineer",
+    "summary": "8 years building large-scale data pipelines. Migrated a 10 TB Hadoop cluster to AWS S3 and Redshift using Spark and Airflow DAGs. Owns pipelines end-to-end including SLA monitoring and incident response.",
+    "experience": "Currently at a Series C fintech building the data platform from scratch. Led a team of 3 engineers. Previously at an e-commerce company processing 500M events/day with PySpark on EMR. Built dbt models for a 50-table dimensional warehouse.",
+    "education": "B.Tech Computer Science, IIT Bombay",
+    "github_repos": 38,
+    "endorsements": 14,
+    "skills": [
+      "Python",
+      "Apache Spark",
+      "Apache Airflow",
+      "AWS",
+      "dbt",
+      "SQL",
+      "Redshift",
+      "S3"
+    ],
+    "embedding_score": 0.547,
+    "skill_score": 0.5842,
+    "skill_score_raw": 0.6316,
+    "seniority_score": 1.0,
+    "activity_score": 0.85,
+    "composite_score": 0.6562,
+    "skill_evidence": {
+      "required_matched": [
+        "Python",
+        "SQL",
+        "Apache Spark",
+        "Apache Airflow",
+        "AWS (S3, Glue, Redshift)",
+        "dbt"
+      ],
+      "required_missing": [],
+      "implied_matched": [],
+      "implied_missing": [
+        "Git",
+        "Linux",
+        "Docker",
+        "Kafka",
+        "MLflow",
+        "Feature Store",
+        "Kubernetes"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "Python",
+        "SQL"
+      ],
+      "stuffing_ratio": 0.25
+    },
+    "hidden_gem": true,
+    "counterfactual": {
+      "ceiling": "At skill ceiling — no required skills missing.",
+      "missing_skills": [],
+      "estimated_rank_gain": 0,
+      "hypothetical_composite": 0.6562
+    },
+    "analysis": "",
+    "llm_score": 9,
+    "reason": "Candidate has direct experience migrating a large-scale data pipeline to AWS and using Spark, Airflow, and dbt.",
+    "confidence": "high",
+    "evidence": [
+      "8 years building large-scale data pipelines.",
+      "Migrated a 10 TB Hadoop cluster to AWS S3 and Redshift using Spark and Airflow DAGs."
+    ],
+    "evidence_verified": [
+      "8 years building large-scale data pipelines.",
+      "Migrated a 10 TB Hadoop cluster to AWS S3 and Redshift using Spark and Airflow DAGs."
+    ],
+    "evidence_unsupported": [],
+    "calibrated_confidence": 0.8975,
+    "final_score": 0.7781,
+    "score_100": 77.8,
+    "rank": 1,
+    "candidate_id": "C001"
+  },
+  {
+    "id": "C002",
+    "title": "Data Engineer",
+    "summary": "5 years in data engineering. Built end-to-end batch and streaming pipelines on AWS. Strong ownership mindset — fixes things even when they're not mine.",
+    "experience": "At a logistics company: designed Airflow-orchestrated Spark jobs ingesting 200M records/day from Kafka into S3 and Glue. Mentored 2 junior engineers on pipeline best practices. Led migration from cron jobs to Airflow.",
+    "education": "B.E. Information Technology, VIT",
+    "github_repos": 22,
+    "skills": [
+      "Python",
+      "Spark",
+      "Airflow",
+      "AWS",
+      "S3",
+      "Glue",
+      "SQL",
+      "Kafka"
+    ],
+    "embedding_score": 0.682,
+    "skill_score": 0.5355,
+    "skill_score_raw": 0.5789,
+    "seniority_score": 0.15,
+    "activity_score": 0.7333,
+    "composite_score": 0.6467,
+    "skill_evidence": {
+      "required_matched": [
+        "Python",
+        "SQL",
+        "Apache Spark",
+        "Apache Airflow",
+        "AWS (S3, Glue, Redshift)"
+      ],
+      "required_missing": [
+        "dbt"
+      ],
+      "implied_matched": [
+        "Kafka"
+      ],
+      "implied_missing": [
+        "Git",
+        "Linux",
+        "Docker",
+        "MLflow",
+        "Feature Store",
+        "Kubernetes"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "Python",
+        "SQL"
+      ],
+      "stuffing_ratio": 0.25
+    },
+    "hidden_gem": false,
+    "counterfactual": {
+      "ceiling": "Would reach ~#3 with evidence of: dbt.",
+      "missing_skills": [
+        "dbt"
+      ],
+      "estimated_rank_gain": 0,
+      "hypothetical_composite": 0.6108
+    },
+    "analysis": "",
+    "llm_score": 8,
+    "reason": "The candidate has experience with Airflow-orchestrated Spark jobs, AWS (S3, Glue), Kafka, and Python. They also demonstrate a strong ownership mindset.",
+    "confidence": "medium",
+    "evidence": [
+      "Airflow-orchestrated Spark jobs",
+      "AWS (S3, Glue)",
+      "Kafka",
+      "strong ownership mindset"
+    ],
+    "evidence_verified": [
+      "Airflow-orchestrated Spark jobs",
+      "Kafka",
+      "strong ownership mindset"
+    ],
+    "evidence_unsupported": [
+      "AWS (S3, Glue)"
+    ],
+    "calibrated_confidence": 0.625,
+    "final_score": 0.7004,
+    "score_100": 70.0,
+    "rank": 2,
+    "candidate_id": "C002"
+  },
+  {
+    "id": "C014",
+    "title": "Senior Software Engineer",
+    "summary": "7 years in software engineering with strong Python and distributed systems background. No dedicated data pipeline role but has built data-adjacent services.",
+    "experience": "Built Kafka consumers and producers for an event-driven architecture at a payments company. Wrote Python microservices on AWS Lambda and ECS. Designed a PostgreSQL schema for 100M+ transaction records. No Spark or Airflow experience.",
+    "education": "B.Tech CSE, IIT Madras",
+    "github_repos": 31,
+    "endorsements": 10,
+    "skills": [
+      "Python",
+      "Java",
+      "Kafka",
+      "PostgreSQL",
+      "Docker",
+      "AWS",
+      "REST API",
+      "Redis"
+    ],
+    "embedding_score": 0.5763,
+    "skill_score": 0.5368,
+    "skill_score_raw": 0.6316,
+    "seniority_score": 1.0,
+    "activity_score": 0.75,
+    "composite_score": 0.6559,
+    "skill_evidence": {
+      "required_matched": [
+        "Python",
+        "SQL",
+        "Apache Spark",
+        "Apache Airflow",
+        "AWS (S3, Glue, Redshift)"
+      ],
+      "required_missing": [
+        "dbt"
+      ],
+      "implied_matched": [
+        "Docker",
+        "Kafka"
+      ],
+      "implied_missing": [
+        "Git",
+        "Linux",
+        "MLflow",
+        "Feature Store",
+        "Kubernetes"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "Java",
+        "Docker",
+        "REST API",
+        "Redis"
+      ],
+      "stuffing_ratio": 0.5
+    },
+    "hidden_gem": false,
+    "counterfactual": {
+      "ceiling": "Would reach ~#1 with evidence of: dbt.",
+      "missing_skills": [
+        "dbt"
+      ],
+      "estimated_rank_gain": 1,
+      "hypothetical_composite": 0.7301
+    },
+    "analysis": "",
+    "llm_score": 6,
+    "reason": "Has strong Python skills and AWS experience but lacks direct experience with Apache Spark, Apache Airflow, dbt, MLflow, Feature Store, Kubernetes.",
+    "confidence": "low",
+    "evidence": [
+      "Strong Python skills",
+      "AWS experience",
+      "[No Spark or Airflow experience]"
+    ],
+    "evidence_verified": [],
+    "evidence_unsupported": [
+      "Strong Python skills",
+      "AWS experience",
+      "[No Spark or Airflow experience]"
+    ],
+    "calibrated_confidence": 0.1575,
+    "final_score": 0.6475,
+    "score_100": 64.8,
+    "rank": 3,
+    "candidate_id": "C014"
+  },
+  {
+    "id": "C003",
+    "title": "ML Engineer",
+    "summary": "Builds and deploys ML models at scale. Manages feature pipelines and online/offline feature stores on AWS. Works closely with data platform team on Spark-based batch inference.",
+    "experience": "At an AI startup: built the feature engineering pipeline using Apache Spark, wrote Airflow DAGs for daily model retraining, deployed to Kubernetes. Integrated MLflow for experiment tracking. Reduced model serving latency by 40%.",
+    "education": "M.Tech Machine Learning, IISc Bangalore",
+    "github_repos": 29,
+    "skills": [
+      "Python",
+      "PyTorch",
+      "Spark",
+      "Kubernetes",
+      "MLflow",
+      "feature stores",
+      "AWS",
+      "Airflow"
+    ],
+    "embedding_score": 0.5633,
+    "skill_score": 0.5355,
+    "skill_score_raw": 0.5789,
+    "seniority_score": 0.55,
+    "activity_score": 0.9667,
+    "composite_score": 0.6055,
+    "skill_evidence": {
+      "required_matched": [
+        "Python",
+        "Apache Spark",
+        "Apache Airflow",
+        "AWS (S3, Glue, Redshift)"
+      ],
+      "required_missing": [
+        "SQL",
+        "dbt"
+      ],
+      "implied_matched": [
+        "MLflow",
+        "Feature Store",
+        "Kubernetes"
+      ],
+      "implied_missing": [
+        "Git",
+        "Linux",
+        "Docker",
+        "Kafka"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "Python",
+        "PyTorch"
+      ],
+      "stuffing_ratio": 0.25
+    },
+    "hidden_gem": false,
+    "counterfactual": {
+      "ceiling": "Would reach ~#1 with evidence of: SQL, dbt.",
+      "missing_skills": [
+        "SQL",
+        "dbt"
+      ],
+      "estimated_rank_gain": 3,
+      "hypothetical_composite": 0.7123
+    },
+    "analysis": "",
+    "llm_score": 7,
+    "reason": "Candidate has experience with Apache Spark and Airflow, and has deployed models to Kubernetes.",
+    "confidence": "medium",
+    "evidence": [
+      "Apache Spark",
+      "Airflow",
+      "Kubernetes"
+    ],
+    "evidence_verified": [
+      "Apache Spark",
+      "Airflow",
+      "Kubernetes"
+    ],
+    "evidence_unsupported": [],
+    "calibrated_confidence": 0.6925,
+    "final_score": 0.6386,
+    "score_100": 63.9,
+    "rank": 4,
+    "candidate_id": "C003"
+  },
+  {
+    "id": "C012",
+    "title": "Analytics Associate",
+    "summary": "Two years as analytics associate at an edtech company. Job title understates the actual work: I built and maintain the entire data ingestion layer using Airflow and Spark, loaded into S3 and queried via Athena. Self-taught most of it.",
+    "experience": "Despite the junior title, I own the data pipeline completely. Built Apache Airflow DAGs to ingest data from 5 source systems into AWS S3. Wrote Python and PySpark jobs for transformation. Set up AWS Glue crawlers and Athena tables. Also built dbt models for the analytics layer. Presented pipeline architecture to the CTO.",
+    "education": "B.Com (Hons), Shri Ram College of Commerce",
+    "github_repos": 9,
+    "skills": [
+      "SQL",
+      "Python",
+      "Excel",
+      "Tableau"
+    ],
+    "embedding_score": 0.5477,
+    "skill_score": 0.4895,
+    "skill_score_raw": 0.6316,
+    "seniority_score": 1.0,
+    "activity_score": 0.3,
+    "composite_score": 0.5367,
+    "skill_evidence": {
+      "required_matched": [
+        "Python",
+        "SQL",
+        "Apache Spark",
+        "Apache Airflow",
+        "AWS (S3, Glue, Redshift)",
+        "dbt"
+      ],
+      "required_missing": [],
+      "implied_matched": [],
+      "implied_missing": [
+        "Git",
+        "Linux",
+        "Docker",
+        "Kafka",
+        "MLflow",
+        "Feature Store",
+        "Kubernetes"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "SQL",
+        "Excel",
+        "Tableau"
+      ],
+      "stuffing_ratio": 0.75
+    },
+    "hidden_gem": true,
+    "counterfactual": {
+      "ceiling": "At skill ceiling — no required skills missing.",
+      "missing_skills": [],
+      "estimated_rank_gain": 0,
+      "hypothetical_composite": 0.5367
+    },
+    "analysis": "",
+    "llm_score": 7,
+    "reason": "The candidate has experience with Apache Airflow, AWS S3, and PySpark for data ingestion and transformation, which aligns with the job requirements.",
+    "confidence": "medium",
+    "evidence": [
+      "Apache Airflow DAGs",
+      "AWS S3",
+      "PySpark jobs"
+    ],
+    "evidence_verified": [
+      "Apache Airflow DAGs",
+      "AWS S3",
+      "PySpark jobs"
+    ],
+    "evidence_unsupported": [],
+    "calibrated_confidence": 0.6925,
+    "final_score": 0.5939,
+    "score_100": 59.4,
+    "rank": 5,
+    "candidate_id": "C012"
+  },
+  {
+    "id": "C011",
+    "title": "Platform Engineer",
+    "summary": "Platform engineer who crossed over into data infrastructure. Runs the Spark cluster on Kubernetes, handles Kafka topic management, and writes Python tooling for the data team.",
+    "experience": "At a growth-stage startup: owns the compute platform — Kubernetes on EKS, Kafka cluster on AWS MSK, and a bare-metal Spark cluster. Writes Python scripts to automate cluster operations. Partners with data engineers on pipeline performance tuning.",
+    "education": "B.Tech CSE, Anna University",
+    "github_repos": 20,
+    "endorsements": 8,
+    "skills": [
+      "Kubernetes",
+      "AWS",
+      "Python",
+      "Spark",
+      "Terraform",
+      "Kafka",
+      "Docker"
+    ],
+    "embedding_score": 0.5661,
+    "skill_score": 0.4331,
+    "skill_score_raw": 0.4737,
+    "seniority_score": 0.55,
+    "activity_score": 0.5333,
+    "composite_score": 0.5027,
+    "skill_evidence": {
+      "required_matched": [
+        "Python",
+        "Apache Spark",
+        "AWS (S3, Glue, Redshift)"
+      ],
+      "required_missing": [
+        "SQL",
+        "Apache Airflow",
+        "dbt"
+      ],
+      "implied_matched": [
+        "Docker",
+        "Kafka",
+        "Kubernetes"
+      ],
+      "implied_missing": [
+        "Git",
+        "Linux",
+        "MLflow",
+        "Feature Store"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "Terraform",
+        "Docker"
+      ],
+      "stuffing_ratio": 0.2857
+    },
+    "hidden_gem": false,
+    "counterfactual": {
+      "ceiling": "Would reach ~#3 with evidence of: SQL, Apache Airflow, dbt.",
+      "missing_skills": [
+        "SQL",
+        "Apache Airflow",
+        "dbt"
+      ],
+      "estimated_rank_gain": 4,
+      "hypothetical_composite": 0.6481
+    },
+    "analysis": "",
+    "llm_score": 7,
+    "reason": "The candidate has experience with Kubernetes, AWS, Python, Spark, and Kafka – all must-haves for the job. They also have some experience with Terraform, which is an implied skill.",
+    "confidence": "medium",
+    "evidence": [
+      "Kubernetes",
+      "AWS",
+      "Python",
+      "Spark",
+      "Kafka"
+    ],
+    "evidence_verified": [
+      "Kubernetes",
+      "AWS",
+      "Python",
+      "Spark",
+      "Kafka"
+    ],
+    "evidence_unsupported": [],
+    "calibrated_confidence": 0.6925,
+    "final_score": 0.5718,
+    "score_100": 57.2,
+    "rank": 6,
+    "candidate_id": "C011"
+  },
+  {
+    "id": "C010",
+    "title": "Cloud Engineer",
+    "summary": "AWS specialist with 4 years managing cloud infrastructure and data services. Has set up Glue ETL jobs and EMR clusters but has not worked with Airflow or dbt directly.",
+    "experience": "Built AWS Glue pipelines processing clickstream data into S3 and Redshift. Set up EMR clusters for ad-hoc Spark jobs. Wrote Lambda functions for event-triggered data loads. Familiar with the AWS data stack but not the orchestration layer.",
+    "education": "B.Tech CSE, Manipal University",
+    "github_repos": 12,
+    "skills": [
+      "AWS",
+      "S3",
+      "Glue",
+      "Lambda",
+      "Redshift",
+      "EMR",
+      "Python",
+      "SQL"
+    ],
+    "embedding_score": 0.5616,
+    "skill_score": 0.5842,
+    "skill_score_raw": 0.6316,
+    "seniority_score": 0.55,
+    "activity_score": 0.4,
+    "composite_score": 0.538,
+    "skill_evidence": {
+      "required_matched": [
+        "Python",
+        "SQL",
+        "Apache Spark",
+        "Apache Airflow",
+        "AWS (S3, Glue, Redshift)",
+        "dbt"
+      ],
+      "required_missing": [],
+      "implied_matched": [],
+      "implied_missing": [
+        "Git",
+        "Linux",
+        "Docker",
+        "Kafka",
+        "MLflow",
+        "Feature Store",
+        "Kubernetes"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "Python",
+        "SQL"
+      ],
+      "stuffing_ratio": 0.25
+    },
+    "hidden_gem": false,
+    "counterfactual": {
+      "ceiling": "At skill ceiling — no required skills missing.",
+      "missing_skills": [],
+      "estimated_rank_gain": 0,
+      "hypothetical_composite": 0.538
+    },
+    "analysis": "",
+    "llm_score": 5,
+    "reason": "Candidate has experience with AWS, SQL, and Python but lacks direct experience with Apache Spark, Apache Airflow, dbt, and the orchestration layer.",
+    "confidence": "low",
+    "evidence": [
+      "AWS",
+      "SQL",
+      "Python",
+      "[Apache Spark]",
+      "[Apache Airflow]",
+      "[dbt]"
+    ],
+    "evidence_verified": [
+      "AWS",
+      "SQL",
+      "Python"
+    ],
+    "evidence_unsupported": [
+      "[Apache Spark]",
+      "[Apache Airflow]",
+      "[dbt]"
+    ],
+    "calibrated_confidence": 0.3125,
+    "final_score": 0.5323,
+    "score_100": 53.2,
+    "rank": 7,
+    "candidate_id": "C010"
+  },
+  {
+    "id": "C004",
+    "title": "Analytics Engineer",
+    "summary": "Owns the analytics layer at a SaaS company. Built 80+ dbt models transforming raw events into clean dimensional tables. Scheduled transformations with Airflow on AWS.",
+    "experience": "Designed and maintained the entire dbt project (80 models, 200 tests). Wrote Airflow DAGs to orchestrate dbt runs and S3 data loads. Mentored analysts on SQL and dbt best practices. Partnered with ML team to surface clean feature tables.",
+    "education": "B.Sc Statistics, Delhi University",
+    "github_repos": 11,
+    "skills": [
+      "dbt",
+      "SQL",
+      "Snowflake",
+      "Python",
+      "Airflow",
+      "Looker",
+      "S3"
+    ],
+    "embedding_score": 0.454,
+    "skill_score": 0.4586,
+    "skill_score_raw": 0.5263,
+    "seniority_score": 0.55,
+    "activity_score": 0.3667,
+    "composite_score": 0.3593,
+    "skill_evidence": {
+      "required_matched": [
+        "Python",
+        "SQL",
+        "Apache Airflow",
+        "AWS (S3, Glue, Redshift)",
+        "dbt"
+      ],
+      "required_missing": [
+        "Apache Spark"
+      ],
+      "implied_matched": [],
+      "implied_missing": [
+        "Git",
+        "Linux",
+        "Docker",
+        "Kafka",
+        "MLflow",
+        "Feature Store",
+        "Kubernetes"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "Snowflake",
+        "Python",
+        "Looker"
+      ],
+      "stuffing_ratio": 0.4286
+    },
+    "hidden_gem": false,
+    "counterfactual": {
+      "ceiling": "Would reach ~#7 with evidence of: Apache Spark.",
+      "missing_skills": [
+        "Apache Spark"
+      ],
+      "estimated_rank_gain": 5,
+      "hypothetical_composite": 0.5263
+    },
+    "analysis": "",
+    "llm_score": 7,
+    "reason": "Candidate has experience in building and maintaining dbt projects (80 models) and using Airflow for orchestration.",
+    "confidence": "medium",
+    "evidence": [
+      "Owns the analytics layer",
+      "Designed and maintained the entire dbt project",
+      "Wrote Airflow DAGs"
+    ],
+    "evidence_verified": [
+      "Owns the analytics layer",
+      "Designed and maintained the entire dbt project",
+      "Wrote Airflow DAGs"
+    ],
+    "evidence_unsupported": [],
+    "calibrated_confidence": 0.6925,
+    "final_score": 0.4785,
+    "score_100": 47.9,
+    "rank": 8,
+    "candidate_id": "C004"
+  },
+  {
+    "id": "C005",
+    "title": "Backend Engineer",
+    "summary": "5 years in backend services. Built Kafka consumers for real-time data ingestion and designed microservices on AWS. No direct pipeline or dbt experience.",
+    "experience": "At a banking platform: built a Kafka-based event streaming service processing 1M messages/day. Designed RESTful APIs. Deployed on AWS using Docker and Kubernetes.",
+    "education": "B.Tech Computer Science, NIT Trichy",
+    "github_repos": 18,
+    "skills": [
+      "Java",
+      "Kafka",
+      "PostgreSQL",
+      "Docker",
+      "AWS",
+      "Kubernetes",
+      "REST API"
+    ],
+    "embedding_score": 0.4561,
+    "skill_score": 0.4331,
+    "skill_score_raw": 0.4737,
+    "seniority_score": 0.55,
+    "activity_score": 0.6,
+    "composite_score": 0.3865,
+    "skill_evidence": {
+      "required_matched": [
+        "SQL",
+        "AWS (S3, Glue, Redshift)",
+        "dbt"
+      ],
+      "required_missing": [
+        "Python",
+        "Apache Spark",
+        "Apache Airflow"
+      ],
+      "implied_matched": [
+        "Docker",
+        "Kafka",
+        "Kubernetes"
+      ],
+      "implied_missing": [
+        "Git",
+        "Linux",
+        "MLflow",
+        "Feature Store"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "Java",
+        "PostgreSQL"
+      ],
+      "stuffing_ratio": 0.2857
+    },
+    "hidden_gem": false,
+    "counterfactual": {
+      "ceiling": "Would reach ~#4 with evidence of: Python, Apache Spark, Apache Airflow.",
+      "missing_skills": [
+        "Python",
+        "Apache Spark",
+        "Apache Airflow"
+      ],
+      "estimated_rank_gain": 5,
+      "hypothetical_composite": 0.6251
+    },
+    "analysis": "",
+    "llm_score": 6,
+    "reason": "Has experience with Kafka, AWS, and microservices, but lacks direct experience with Apache Spark, Apache Airflow, dbt, MLflow, Feature Store, and speaks up when something is broken.",
+    "confidence": "medium",
+    "evidence": [
+      "Kafka",
+      "AWS",
+      "microservices"
+    ],
+    "evidence_verified": [
+      "Kafka",
+      "AWS",
+      "microservices"
+    ],
+    "evidence_unsupported": [],
+    "calibrated_confidence": 0.6725,
+    "final_score": 0.4612,
+    "score_100": 46.1,
+    "rank": 9,
+    "candidate_id": "C005"
+  },
+  {
+    "id": "C008",
+    "title": "Junior Data Engineer",
+    "summary": "1.5 years experience. Writes Python ETL scripts and Airflow DAGs. Limited Spark experience but eager to learn. Works on GCP BigQuery, not AWS.",
+    "experience": "Built 10 Airflow DAGs for daily data ingestion from APIs into BigQuery. Wrote Python scripts for data cleaning and transformation. Learning Apache Spark through online courses.",
+    "education": "B.Tech Computer Science, SRM University",
+    "github_repos": 7,
+    "skills": [
+      "Python",
+      "SQL",
+      "Airflow",
+      "GCP",
+      "BigQuery"
+    ],
+    "embedding_score": 0.6177,
+    "skill_score": 0.4947,
+    "skill_score_raw": 0.5263,
+    "seniority_score": 0.15,
+    "activity_score": 0.2333,
+    "composite_score": 0.4816,
+    "skill_evidence": {
+      "required_matched": [
+        "Python",
+        "SQL",
+        "Apache Spark",
+        "Apache Airflow",
+        "AWS (S3, Glue, Redshift)"
+      ],
+      "required_missing": [
+        "dbt"
+      ],
+      "implied_matched": [],
+      "implied_missing": [
+        "Git",
+        "Linux",
+        "Docker",
+        "Kafka",
+        "MLflow",
+        "Feature Store",
+        "Kubernetes"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "SQL"
+      ],
+      "stuffing_ratio": 0.2
+    },
+    "hidden_gem": false,
+    "counterfactual": {
+      "ceiling": "Would reach ~#8 with evidence of: dbt.",
+      "missing_skills": [
+        "dbt"
+      ],
+      "estimated_rank_gain": 0,
+      "hypothetical_composite": 0.4954
+    },
+    "analysis": "",
+    "llm_score": 3,
+    "reason": "Limited experience with required technologies (Apache Spark, AWS) and seniority level mismatch.",
+    "confidence": "low",
+    "evidence": [
+      "1.5 years experience",
+      "Limited Spark experience",
+      "works on GCP BigQuery, not AWS"
+    ],
+    "evidence_verified": [
+      "1.5 years experience",
+      "Limited Spark experience",
+      "works on GCP BigQuery, not AWS"
+    ],
+    "evidence_unsupported": [],
+    "calibrated_confidence": 0.5275,
+    "final_score": 0.4544,
+    "score_100": 45.4,
+    "rank": 10,
+    "candidate_id": "C008"
+  },
+  {
+    "id": "C013",
+    "title": "Data Support Specialist",
+    "summary": "Support role at a data company — but the real work is maintaining ETL pipelines and fixing broken Airflow jobs when the engineers are unavailable. Three years doing the unacknowledged data engineering.",
+    "experience": "Handle all data pipeline incidents. Fix broken Airflow DAGs, debug Python Spark jobs, reload data from S3 when pipelines fail. Wrote a Python monitoring script that reduced mean-time-to-detect pipeline failures from 4 hours to 15 minutes. Built SQL dbt models for the finance team. Mentored two junior analysts on SQL. Essentially doing data engineering without the title.",
+    "education": "B.Sc Computer Applications, Madras University",
+    "github_repos": 5,
+    "skills": [
+      "SQL",
+      "Python",
+      "Excel",
+      "JIRA"
+    ],
+    "embedding_score": 0.5492,
+    "skill_score": 0.4474,
+    "skill_score_raw": 0.5263,
+    "seniority_score": 0.15,
+    "activity_score": 0.1667,
+    "composite_score": 0.374,
+    "skill_evidence": {
+      "required_matched": [
+        "Python",
+        "SQL",
+        "Apache Spark",
+        "Apache Airflow",
+        "dbt"
+      ],
+      "required_missing": [
+        "AWS (S3, Glue, Redshift)"
+      ],
+      "implied_matched": [],
+      "implied_missing": [
+        "Git",
+        "Linux",
+        "Docker",
+        "Kafka",
+        "MLflow",
+        "Feature Store",
+        "Kubernetes"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "Excel",
+        "JIRA"
+      ],
+      "stuffing_ratio": 0.5
+    },
+    "hidden_gem": false,
+    "counterfactual": {
+      "ceiling": "Would reach ~#9 with evidence of: AWS (S3, Glue, Redshift).",
+      "missing_skills": [
+        "AWS (S3, Glue, Redshift)"
+      ],
+      "estimated_rank_gain": 2,
+      "hypothetical_composite": 0.4649
+    },
+    "analysis": "",
+    "llm_score": 6,
+    "reason": "Candidate has experience in fixing broken Airflow jobs and Python Spark jobs, working with SQL, and building dbt models.",
+    "confidence": "low",
+    "evidence": [
+      "fixing broken Airflow DAGs",
+      "Python Spark jobs",
+      "built SQL dbt models"
+    ],
+    "evidence_verified": [
+      "Python Spark jobs",
+      "built SQL dbt models"
+    ],
+    "evidence_unsupported": [
+      "fixing broken Airflow DAGs"
+    ],
+    "calibrated_confidence": 0.3908,
+    "final_score": 0.4079,
+    "score_100": 40.8,
+    "rank": 11,
+    "candidate_id": "C013"
+  },
+  {
+    "id": "C006",
+    "title": "DevOps Engineer",
+    "summary": "Platform engineer focused on infrastructure reliability and deployment automation. No data pipeline experience but strong AWS and IaC background.",
+    "experience": "Manages Kubernetes clusters on AWS EKS for 30+ microservices. Wrote Terraform modules for VPC, RDS, S3. Built GitHub Actions pipelines for CI/CD. Reduced deployment time from 45 minutes to 8 minutes.",
+    "education": "B.Tech Electronics, BITS Pilani",
+    "github_repos": 15,
+    "skills": [
+      "Kubernetes",
+      "Terraform",
+      "AWS",
+      "CI/CD",
+      "Docker",
+      "Helm",
+      "Linux"
+    ],
+    "embedding_score": 0.4598,
+    "skill_score": 0.2887,
+    "skill_score_raw": 0.3158,
+    "seniority_score": 1.0,
+    "activity_score": 0.5,
+    "composite_score": 0.3855,
+    "skill_evidence": {
+      "required_matched": [
+        "AWS (S3, Glue, Redshift)"
+      ],
+      "required_missing": [
+        "Python",
+        "SQL",
+        "Apache Spark",
+        "Apache Airflow",
+        "dbt"
+      ],
+      "implied_matched": [
+        "Git",
+        "Linux",
+        "Docker",
+        "Kubernetes"
+      ],
+      "implied_missing": [
+        "Kafka",
+        "MLflow",
+        "Feature Store"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "Docker",
+        "Linux"
+      ],
+      "stuffing_ratio": 0.2857
+    },
+    "hidden_gem": false,
+    "counterfactual": {
+      "ceiling": "Would reach ~#1 with evidence of: Python, SQL, Apache Spark (+2 more).",
+      "missing_skills": [
+        "Python",
+        "SQL",
+        "Apache Spark",
+        "Apache Airflow",
+        "dbt"
+      ],
+      "estimated_rank_gain": 9,
+      "hypothetical_composite": 0.6998
+    },
+    "analysis": "",
+    "llm_score": 3,
+    "reason": "Limited evidence of data pipeline experience with Apache Spark, Apache Airflow, dbt, MLflow, and Feature Store.",
+    "confidence": "low",
+    "evidence": [
+      "No direct mention or experience with data pipeline technologies like Apache Spark, Apache Airflow, dbt, MLflow, or Feature Store."
+    ],
+    "evidence_verified": [],
+    "evidence_unsupported": [
+      "No direct mention or experience with data pipeline technologies like Apache Spark, Apache Airflow, dbt, MLflow, or Feature Store."
+    ],
+    "calibrated_confidence": 0.1775,
+    "final_score": 0.3727,
+    "score_100": 37.3,
+    "rank": 12,
+    "candidate_id": "C006"
+  },
+  {
+    "id": "C007",
+    "title": "Data Analyst",
+    "summary": "Analyst at a fintech firm. Strong SQL querying and dashboard building. No pipeline or Spark experience but writes complex analytical SQL daily.",
+    "experience": "Writes ad-hoc SQL queries on a Redshift warehouse for product and revenue analysis. Builds Tableau dashboards for leadership. Automates Excel reports using Python scripts.",
+    "education": "MBA Business Analytics, ISB",
+    "endorsements": 6,
+    "skills": [
+      "SQL",
+      "Python",
+      "Tableau",
+      "Excel",
+      "Power BI"
+    ],
+    "embedding_score": 0.4531,
+    "skill_score": 0.2968,
+    "skill_score_raw": 0.3158,
+    "seniority_score": 1.0,
+    "activity_score": 0.3,
+    "composite_score": 0.351,
+    "skill_evidence": {
+      "required_matched": [
+        "Python",
+        "SQL",
+        "Apache Spark"
+      ],
+      "required_missing": [
+        "Apache Airflow",
+        "AWS (S3, Glue, Redshift)",
+        "dbt"
+      ],
+      "implied_matched": [],
+      "implied_missing": [
+        "Git",
+        "Linux",
+        "Docker",
+        "Kafka",
+        "MLflow",
+        "Feature Store",
+        "Kubernetes"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "Power BI"
+      ],
+      "stuffing_ratio": 0.2
+    },
+    "hidden_gem": false,
+    "counterfactual": {
+      "ceiling": "Would reach ~#5 with evidence of: Apache Airflow, AWS (S3, Glue, Redshift), dbt.",
+      "missing_skills": [
+        "Apache Airflow",
+        "AWS (S3, Glue, Redshift)",
+        "dbt"
+      ],
+      "estimated_rank_gain": 8,
+      "hypothetical_composite": 0.5836
+    },
+    "analysis": "",
+    "llm_score": 3,
+    "reason": "Limited evidence of experience with Apache Spark, Apache Airflow, AWS (S3, Glue, Redshift), dbt, Git, Linux, Docker, Kafka, MLflow, Feature Store, or Kubernetes.",
+    "confidence": "low",
+    "evidence": [
+      "No pipeline or Spark experience",
+      "No mention of AWS services other than Redshift",
+      "No mention of Git, Linux, Docker, Kafka, MLflow, Feature Store, or Kubernetes"
+    ],
+    "evidence_verified": [
+      "No pipeline or Spark experience"
+    ],
+    "evidence_unsupported": [
+      "No mention of AWS services other than Redshift",
+      "No mention of Git, Linux, Docker, Kafka, MLflow, Feature Store, or Kubernetes"
+    ],
+    "calibrated_confidence": 0.2942,
+    "final_score": 0.3433,
+    "score_100": 34.3,
+    "rank": 13,
+    "candidate_id": "C007"
+  },
+  {
+    "id": "C015",
+    "title": "BI Developer",
+    "summary": "BI developer with 6 years building analytical solutions. Strong SQL and data modeling skills. Works in the Microsoft stack; no AWS or Spark experience.",
+    "experience": "Designed star-schema data models in SSAS. Writes complex SQL queries and DAX measures. Built Power BI dashboards for 500+ users. Wrote Python scripts for data preparation. Has not worked with Spark, Airflow, or the AWS data stack.",
+    "education": "B.Tech CSE, Osmania University",
+    "endorsements": 9,
+    "skills": [
+      "Power BI",
+      "SQL",
+      "DAX",
+      "SSAS",
+      "Python",
+      "Azure",
+      "Excel"
+    ],
+    "embedding_score": 0.4216,
+    "skill_score": 0.4812,
+    "skill_score_raw": 0.5263,
+    "seniority_score": 0.55,
+    "activity_score": 0.45,
+    "composite_score": 0.3436,
+    "skill_evidence": {
+      "required_matched": [
+        "Python",
+        "SQL",
+        "Apache Spark",
+        "Apache Airflow",
+        "AWS (S3, Glue, Redshift)"
+      ],
+      "required_missing": [
+        "dbt"
+      ],
+      "implied_matched": [],
+      "implied_missing": [
+        "Git",
+        "Linux",
+        "Docker",
+        "Kafka",
+        "MLflow",
+        "Feature Store",
+        "Kubernetes"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "Azure",
+        "Excel"
+      ],
+      "stuffing_ratio": 0.2857
+    },
+    "hidden_gem": false,
+    "counterfactual": {
+      "ceiling": "Would reach ~#7 with evidence of: dbt.",
+      "missing_skills": [
+        "dbt"
+      ],
+      "estimated_rank_gain": 7,
+      "hypothetical_composite": 0.5291
+    },
+    "analysis": "",
+    "llm_score": 3,
+    "reason": "Limited evidence of experience with Apache Spark, Apache Airflow, AWS (S3, Glue, Redshift), dbt, Kafka, MLflow, Feature Store, and Kubernetes.",
+    "confidence": "low",
+    "evidence": [
+      "Has not worked with Spark, Airflow, or the AWS data stack."
+    ],
+    "evidence_verified": [
+      "Has not worked with Spark, Airflow, or the AWS data stack."
+    ],
+    "evidence_unsupported": [],
+    "calibrated_confidence": 0.5275,
+    "final_score": 0.3371,
+    "score_100": 33.7,
+    "rank": 14,
+    "candidate_id": "C015"
+  },
+  {
+    "id": "C009",
+    "title": "Frontend Developer",
+    "summary": "Frontend specialist with 4 years building React apps. No backend or data engineering experience.",
+    "experience": "Builds React SPAs and component libraries. Works with GraphQL APIs. No experience with data pipelines, SQL, or cloud infrastructure.",
+    "education": "B.Tech IT, Pune University",
+    "github_repos": 25,
+    "skills": [
+      "React",
+      "TypeScript",
+      "GraphQL",
+      "CSS",
+      "Figma",
+      "Node.js"
+    ],
+    "embedding_score": 0.4206,
+    "skill_score": 0.0842,
+    "skill_score_raw": 0.1053,
+    "seniority_score": 0.55,
+    "activity_score": 0.8333,
+    "composite_score": 0.2412,
+    "skill_evidence": {
+      "required_matched": [
+        "SQL"
+      ],
+      "required_missing": [
+        "Python",
+        "Apache Spark",
+        "Apache Airflow",
+        "AWS (S3, Glue, Redshift)",
+        "dbt"
+      ],
+      "implied_matched": [],
+      "implied_missing": [
+        "Git",
+        "Linux",
+        "Docker",
+        "Kafka",
+        "MLflow",
+        "Feature Store",
+        "Kubernetes"
+      ]
+    },
+    "stuffing": {
+      "claimed_unsupported": [
+        "TypeScript",
+        "CSS",
+        "Figma",
+        "Node.js"
+      ],
+      "stuffing_ratio": 0.6667
+    },
+    "hidden_gem": false,
+    "counterfactual": {
+      "ceiling": "Would reach ~#5 with evidence of: Python, Apache Spark, Apache Airflow (+2 more).",
+      "missing_skills": [
+        "Python",
+        "Apache Spark",
+        "Apache Airflow",
+        "AWS (S3, Glue, Redshift)",
+        "dbt"
+      ],
+      "estimated_rank_gain": 10,
+      "hypothetical_composite": 0.5863
+    },
+    "analysis": "",
+    "llm_score": 1,
+    "reason": "Candidate is a Frontend Developer without experience in Python, SQL, Apache Spark, Apache Airflow, AWS (S3, Glue, Redshift), dbt, or any of the implied technologies.",
+    "confidence": "low",
+    "evidence": [
+      "Frontend specialist",
+      "No backend or data engineering experience"
+    ],
+    "evidence_verified": [
+      "Frontend specialist",
+      "No backend or data engineering experience"
+    ],
+    "evidence_unsupported": [],
+    "calibrated_confidence": 0.5675,
+    "final_score": 0.22,
+    "score_100": 22.0,
+    "rank": 15,
+    "candidate_id": "C009"
+  }
+]

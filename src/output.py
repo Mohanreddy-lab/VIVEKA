@@ -7,10 +7,23 @@ Writes the final ranked shortlist in two formats:
 
 Also prints a rich-formatted leaderboard to the terminal.
 
-Columns written (adapt to exact organizers' spec when dataset arrives):
-  rank | candidate_id | final_score | llm_score | confidence |
-  hidden_gem | reason | skill_score | seniority_score | activity_score |
-  composite_score | embedding_score
+# ── HOW TO CHANGE THE OUTPUT COLUMNS ──────────────────────────────────────
+#
+# To match an organizer's exact column spec, edit CSV_COLUMNS below.
+# The pipeline attaches all signals to each candidate dict; just name
+# the keys you need and they'll appear in the CSV in that order.
+#
+# Available keys per candidate (after all pipeline stages):
+#   rank, candidate_id, final_score, llm_score, confidence, hidden_gem,
+#   reason, evidence (pipe-joined verified snippets), skill_score,
+#   seniority_score, activity_score, composite_score, embedding_score,
+#   calibrated_confidence, score_100, stuffing_ratio
+#
+# Example: organizer wants only rank, candidate_id, score, reason:
+#   CSV_COLUMNS = ["rank", "candidate_id", "final_score", "reason"]
+#
+# The JSON output always includes ALL fields — only the CSV is trimmed.
+# ──────────────────────────────────────────────────────────────────────────
 """
 
 import csv
@@ -38,6 +51,7 @@ CSV_COLUMNS = [
     "confidence",
     "hidden_gem",
     "reason",
+    "evidence",
     "skill_score",
     "seniority_score",
     "activity_score",
@@ -55,6 +69,13 @@ def _get_id(candidate: dict) -> str:
 
 
 def _to_row(rank: int, candidate: dict) -> dict:
+    # Flatten evidence_verified list into a pipe-separated string for CSV.
+    evidence_list = candidate.get("evidence_verified") or candidate.get("evidence") or []
+    if isinstance(evidence_list, list):
+        evidence_str = " | ".join(str(e) for e in evidence_list)
+    else:
+        evidence_str = str(evidence_list)
+
     return {
         "rank":             rank,
         "candidate_id":     _get_id(candidate),
@@ -63,6 +84,7 @@ def _to_row(rank: int, candidate: dict) -> dict:
         "confidence":       candidate.get("confidence",     "N/A"),
         "hidden_gem":       "yes" if candidate.get("hidden_gem") else "no",
         "reason":           candidate.get("reason",         ""),
+        "evidence":         evidence_str,
         "skill_score":      round(float(candidate.get("skill_score",      0.0)), 4),
         "seniority_score":  round(float(candidate.get("seniority_score",  0.0)), 4),
         "activity_score":   round(float(candidate.get("activity_score",   0.0)), 4),
@@ -128,7 +150,7 @@ def print_summary(ranked: List[Dict], top_n: int = 10) -> None:
 
 
 def _print_summary_rich(ranked: List[Dict], top_n: int) -> None:
-    console = Console()
+    console = Console(legacy_windows=False)
     gems    = [c for c in ranked if c.get("hidden_gem")]
     top     = ranked[:top_n]
 
@@ -247,6 +269,55 @@ def normalize_scores(ranked: List[Dict]) -> List[Dict]:
     for c in ranked:
         c["score_100"] = round(c.get("final_score", 0.0) * 100, 1)
     return ranked
+
+
+def validate_output(ranked: List[Dict]) -> bool:
+    """
+    Validate the ranked output for submission correctness.
+    Checks: sequential ranks from 1, no null final_scores, sorted desc, non-empty reasons.
+    Prints PASS/FAIL per check and returns True if all pass.
+    """
+    checks = []
+
+    # 1. Ranks are 1..N with no gaps
+    expected = list(range(1, len(ranked) + 1))
+    actual   = [int(c.get("rank", c.get("_rank", i + 1))) for i, c in enumerate(ranked)]
+    checks.append(("Ranks 1..N sequential", actual == expected))
+
+    # 2. No null final_scores
+    null_scores = [c.get("candidate_id") or c.get("id") for c in ranked
+                   if c.get("final_score") is None]
+    checks.append(("No null final_scores", len(null_scores) == 0))
+
+    # 3. Sorted by final_score descending
+    scores = [float(c.get("final_score", 0)) for c in ranked]
+    checks.append(("Sorted by final_score desc", scores == sorted(scores, reverse=True)))
+
+    # 4. Every row has a non-empty reason
+    empty_reasons = [c.get("candidate_id") or c.get("id") for c in ranked
+                     if not str(c.get("reason", "")).strip()]
+    checks.append(("All rows have non-empty reason", len(empty_reasons) == 0))
+
+    print(f"\n{'='*50}")
+    print("  OUTPUT VALIDATION")
+    print(f"{'='*50}")
+    all_pass = True
+    for name, ok in checks:
+        status = "PASS" if ok else "FAIL"
+        print(f"  [{status}] {name}")
+        if not ok:
+            all_pass = False
+
+    if null_scores:
+        print(f"         Null scores: {null_scores}")
+    if empty_reasons:
+        print(f"         Empty reasons: {empty_reasons}")
+
+    final = "PASS" if all_pass else "FAIL"
+    print(f"{'='*50}")
+    print(f"  OVERALL: {final}  ({len(ranked)} candidates)")
+    print(f"{'='*50}\n")
+    return all_pass
 
 
 # ---------------------------------------------------------------------------

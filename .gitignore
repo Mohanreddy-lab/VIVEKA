@@ -7,10 +7,13 @@ venv/
 .venv/
 *.egg-info/
 
-# Data — never commit candidate dataset or pipeline output
+# Data — never commit real candidate dataset or pipeline output
 data/*
 !data/.gitkeep
-!data/job_description.txt   # sample JD is safe to commit
+!data/job_description.txt      # sample JD is safe to commit
+!data/sample_candidates.json   # built-in demo dataset — no real PII
+!data/ranked_output.json       # submission artifact
+!data/ranked_output.csv        # submission artifact
 
 # HuggingFace / sentence-transformers model cache
 .cache/
@@ -29,3 +32,4 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+.gstack/

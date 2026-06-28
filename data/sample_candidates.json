@@ -1,0 +1,140 @@
+[
+  {
+    "id": "C001",
+    "title": "Senior Data Engineer",
+    "skills": ["Python", "Apache Spark", "Apache Airflow", "AWS", "dbt", "SQL", "Redshift", "S3"],
+    "summary": "8 years building large-scale data pipelines. Migrated a 10 TB Hadoop cluster to AWS S3 and Redshift using Spark and Airflow DAGs. Owns pipelines end-to-end including SLA monitoring and incident response.",
+    "experience": "Currently at a Series C fintech building the data platform from scratch. Led a team of 3 engineers. Previously at an e-commerce company processing 500M events/day with PySpark on EMR. Built dbt models for a 50-table dimensional warehouse.",
+    "education": "B.Tech Computer Science, IIT Bombay",
+    "github_repos": 38,
+    "endorsements": 14
+  },
+  {
+    "id": "C002",
+    "title": "Data Engineer",
+    "skills": ["Python", "Spark", "Airflow", "AWS", "S3", "Glue", "SQL", "Kafka"],
+    "summary": "5 years in data engineering. Built end-to-end batch and streaming pipelines on AWS. Strong ownership mindset — fixes things even when they're not mine.",
+    "experience": "At a logistics company: designed Airflow-orchestrated Spark jobs ingesting 200M records/day from Kafka into S3 and Glue. Mentored 2 junior engineers on pipeline best practices. Led migration from cron jobs to Airflow.",
+    "education": "B.E. Information Technology, VIT",
+    "github_repos": 22
+  },
+  {
+    "id": "C003",
+    "title": "ML Engineer",
+    "skills": ["Python", "PyTorch", "Spark", "Kubernetes", "MLflow", "feature stores", "AWS", "Airflow"],
+    "summary": "Builds and deploys ML models at scale. Manages feature pipelines and online/offline feature stores on AWS. Works closely with data platform team on Spark-based batch inference.",
+    "experience": "At an AI startup: built the feature engineering pipeline using Apache Spark, wrote Airflow DAGs for daily model retraining, deployed to Kubernetes. Integrated MLflow for experiment tracking. Reduced model serving latency by 40%.",
+    "education": "M.Tech Machine Learning, IISc Bangalore",
+    "github_repos": 29
+  },
+  {
+    "id": "C004",
+    "title": "Analytics Engineer",
+    "skills": ["dbt", "SQL", "Snowflake", "Python", "Airflow", "Looker", "S3"],
+    "summary": "Owns the analytics layer at a SaaS company. Built 80+ dbt models transforming raw events into clean dimensional tables. Scheduled transformations with Airflow on AWS.",
+    "experience": "Designed and maintained the entire dbt project (80 models, 200 tests). Wrote Airflow DAGs to orchestrate dbt runs and S3 data loads. Mentored analysts on SQL and dbt best practices. Partnered with ML team to surface clean feature tables.",
+    "education": "B.Sc Statistics, Delhi University",
+    "github_repos": 11
+  },
+  {
+    "id": "C005",
+    "title": "Backend Engineer",
+    "skills": ["Java", "Kafka", "PostgreSQL", "Docker", "AWS", "Kubernetes", "REST API"],
+    "summary": "5 years in backend services. Built Kafka consumers for real-time data ingestion and designed microservices on AWS. No direct pipeline or dbt experience.",
+    "experience": "At a banking platform: built a Kafka-based event streaming service processing 1M messages/day. Designed RESTful APIs. Deployed on AWS using Docker and Kubernetes.",
+    "education": "B.Tech Computer Science, NIT Trichy",
+    "github_repos": 18
+  },
+  {
+    "id": "C006",
+    "title": "DevOps Engineer",
+    "skills": ["Kubernetes", "Terraform", "AWS", "CI/CD", "Docker", "Helm", "Linux"],
+    "summary": "Platform engineer focused on infrastructure reliability and deployment automation. No data pipeline experience but strong AWS and IaC background.",
+    "experience": "Manages Kubernetes clusters on AWS EKS for 30+ microservices. Wrote Terraform modules for VPC, RDS, S3. Built GitHub Actions pipelines for CI/CD. Reduced deployment time from 45 minutes to 8 minutes.",
+    "education": "B.Tech Electronics, BITS Pilani",
+    "github_repos": 15
+  },
+  {
+    "id": "C007",
+    "title": "Data Analyst",
+    "skills": ["SQL", "Python", "Tableau", "Excel", "Power BI"],
+    "summary": "Analyst at a fintech firm. Strong SQL querying and dashboard building. No pipeline or Spark experience but writes complex analytical SQL daily.",
+    "experience": "Writes ad-hoc SQL queries on a Redshift warehouse for product and revenue analysis. Builds Tableau dashboards for leadership. Automates Excel reports using Python scripts.",
+    "education": "MBA Business Analytics, ISB",
+    "endorsements": 6
+  },
+  {
+    "id": "C008",
+    "title": "Junior Data Engineer",
+    "skills": ["Python", "SQL", "Airflow", "GCP", "BigQuery"],
+    "summary": "1.5 years experience. Writes Python ETL scripts and Airflow DAGs. Limited Spark experience but eager to learn. Works on GCP BigQuery, not AWS.",
+    "experience": "Built 10 Airflow DAGs for daily data ingestion from APIs into BigQuery. Wrote Python scripts for data cleaning and transformation. Learning Apache Spark through online courses.",
+    "education": "B.Tech Computer Science, SRM University",
+    "github_repos": 7
+  },
+  {
+    "id": "C009",
+    "title": "Frontend Developer",
+    "skills": ["React", "TypeScript", "GraphQL", "CSS", "Figma", "Node.js"],
+    "summary": "Frontend specialist with 4 years building React apps. No backend or data engineering experience.",
+    "experience": "Builds React SPAs and component libraries. Works with GraphQL APIs. No experience with data pipelines, SQL, or cloud infrastructure.",
+    "education": "B.Tech IT, Pune University",
+    "github_repos": 25
+  },
+  {
+    "id": "C010",
+    "title": "Cloud Engineer",
+    "skills": ["AWS", "S3", "Glue", "Lambda", "Redshift", "EMR", "Python", "SQL"],
+    "summary": "AWS specialist with 4 years managing cloud infrastructure and data services. Has set up Glue ETL jobs and EMR clusters but has not worked with Airflow or dbt directly.",
+    "experience": "Built AWS Glue pipelines processing clickstream data into S3 and Redshift. Set up EMR clusters for ad-hoc Spark jobs. Wrote Lambda functions for event-triggered data loads. Familiar with the AWS data stack but not the orchestration layer.",
+    "education": "B.Tech CSE, Manipal University",
+    "github_repos": 12
+  },
+  {
+    "id": "C011",
+    "title": "Platform Engineer",
+    "skills": ["Kubernetes", "AWS", "Python", "Spark", "Terraform", "Kafka", "Docker"],
+    "summary": "Platform engineer who crossed over into data infrastructure. Runs the Spark cluster on Kubernetes, handles Kafka topic management, and writes Python tooling for the data team.",
+    "experience": "At a growth-stage startup: owns the compute platform — Kubernetes on EKS, Kafka cluster on AWS MSK, and a bare-metal Spark cluster. Writes Python scripts to automate cluster operations. Partners with data engineers on pipeline performance tuning.",
+    "education": "B.Tech CSE, Anna University",
+    "github_repos": 20,
+    "endorsements": 8
+  },
+  {
+    "id": "C012",
+    "title": "Analytics Associate",
+    "skills": ["SQL", "Python", "Excel", "Tableau"],
+    "summary": "Two years as analytics associate at an edtech company. Job title understates the actual work: I built and maintain the entire data ingestion layer using Airflow and Spark, loaded into S3 and queried via Athena. Self-taught most of it.",
+    "experience": "Despite the junior title, I own the data pipeline completely. Built Apache Airflow DAGs to ingest data from 5 source systems into AWS S3. Wrote Python and PySpark jobs for transformation. Set up AWS Glue crawlers and Athena tables. Also built dbt models for the analytics layer. Presented pipeline architecture to the CTO.",
+    "education": "B.Com (Hons), Shri Ram College of Commerce",
+    "github_repos": 9
+  },
+  {
+    "id": "C013",
+    "title": "Data Support Specialist",
+    "skills": ["SQL", "Python", "Excel", "JIRA"],
+    "summary": "Support role at a data company — but the real work is maintaining ETL pipelines and fixing broken Airflow jobs when the engineers are unavailable. Three years doing the unacknowledged data engineering.",
+    "experience": "Handle all data pipeline incidents. Fix broken Airflow DAGs, debug Python Spark jobs, reload data from S3 when pipelines fail. Wrote a Python monitoring script that reduced mean-time-to-detect pipeline failures from 4 hours to 15 minutes. Built SQL dbt models for the finance team. Mentored two junior analysts on SQL. Essentially doing data engineering without the title.",
+    "education": "B.Sc Computer Applications, Madras University",
+    "github_repos": 5
+  },
+  {
+    "id": "C014",
+    "title": "Senior Software Engineer",
+    "skills": ["Python", "Java", "Kafka", "PostgreSQL", "Docker", "AWS", "REST API", "Redis"],
+    "summary": "7 years in software engineering with strong Python and distributed systems background. No dedicated data pipeline role but has built data-adjacent services.",
+    "experience": "Built Kafka consumers and producers for an event-driven architecture at a payments company. Wrote Python microservices on AWS Lambda and ECS. Designed a PostgreSQL schema for 100M+ transaction records. No Spark or Airflow experience.",
+    "education": "B.Tech CSE, IIT Madras",
+    "github_repos": 31,
+    "endorsements": 10
+  },
+  {
+    "id": "C015",
+    "title": "BI Developer",
+    "skills": ["Power BI", "SQL", "DAX", "SSAS", "Python", "Azure", "Excel"],
+    "summary": "BI developer with 6 years building analytical solutions. Strong SQL and data modeling skills. Works in the Microsoft stack; no AWS or Spark experience.",
+    "experience": "Designed star-schema data models in SSAS. Writes complex SQL queries and DAX measures. Built Power BI dashboards for 500+ users. Wrote Python scripts for data preparation. Has not worked with Spark, Airflow, or the AWS data stack.",
+    "education": "B.Tech CSE, Osmania University",
+    "endorsements": 9
+  }
+]
