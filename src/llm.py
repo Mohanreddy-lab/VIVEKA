@@ -105,7 +105,7 @@ class _HFInferenceChat(BaseChatModel):
             elif isinstance(m, AIMessage):
                 hf_msgs.append({"role": "assistant", "content": m.content})
 
-        resp = client.chat_completions(
+        resp = client.chat_completion(
             model=self.model_id,
             messages=hf_msgs,
             max_tokens=512,
