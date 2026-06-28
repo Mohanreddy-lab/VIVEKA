@@ -48,21 +48,130 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-  .metric-card { background: #1e2a3a; border-radius: 8px; padding: 12px; }
-  .gem-badge   { color: #ffd700; font-weight: bold; }
-  .score-high  { color: #4caf50; }
-  .score-med   { color: #ff9800; }
-  .score-low   { color: #f44336; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+html, body, [class*="css"] { font-family: 'Inter', sans-serif !important; }
+
+.stApp {
+  background: radial-gradient(ellipse at top left, #130a2e 0%, #07070f 45%, #081628 100%);
+  min-height: 100vh;
+}
+
+/* ── Hero banner ──────────────────────────────────────── */
+.vk-hero {
+  background: linear-gradient(135deg,rgba(124,58,237,.18) 0%,rgba(59,130,246,.12) 60%,rgba(16,185,129,.08) 100%);
+  border: 1px solid rgba(124,58,237,.35);
+  border-radius: 20px; padding: 22px 28px; margin-bottom: 20px;
+}
+
+/* ── Stat cards ───────────────────────────────────────── */
+.vk-stat {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 14px; padding: 16px 10px; text-align: center;
+}
+.vk-stat-n  { font-size: 30px; font-weight: 800; }
+.vk-stat-l  { font-size: 11px; color: rgba(255,255,255,.45); margin-top: 3px; }
+.vk-gold    { color: #fbbf24; }
+.vk-purple  { color: #a78bfa; }
+.vk-green   { color: #34d399; }
+.vk-blue    { color: #60a5fa; }
+
+/* ── Glass candidate card ─────────────────────────────── */
+.vk-card {
+  background: rgba(255,255,255,.04);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 16px; padding: 18px 20px; margin-bottom: 12px;
+  transition: border-color .25s;
+}
+.vk-card:hover { border-color: rgba(124,58,237,.5); }
+
+/* ── Score bar ────────────────────────────────────────── */
+.vk-bar-wrap  { background:rgba(255,255,255,.07); border-radius:999px; height:7px; overflow:hidden; margin:5px 0; }
+.vk-bar-fill  { height:100%; border-radius:999px; }
+.vk-bar-final { background: linear-gradient(90deg,#7c3aed,#3b82f6,#10b981); }
+.vk-bar-skill { background: linear-gradient(90deg,#10b981,#34d399); }
+.vk-bar-embed { background: linear-gradient(90deg,#3b82f6,#60a5fa); }
+.vk-bar-ghost { background: linear-gradient(90deg,#7c3aed,#a78bfa); }
+
+/* ── Badges ───────────────────────────────────────────── */
+.vk-rank   { display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;font-weight:800;font-size:13px; }
+.vk-r1     { background:linear-gradient(135deg,#f59e0b,#fcd34d);color:#000; }
+.vk-r2     { background:linear-gradient(135deg,#6b7280,#d1d5db);color:#000; }
+.vk-r3     { background:linear-gradient(135deg,#92400e,#d97706);color:#fff; }
+.vk-rn     { background:rgba(255,255,255,.12);color:#e5e7eb; }
+.vk-gem    { background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;font-size:12px; }
+.vk-ghost  { background:rgba(139,92,246,.2);border:1px solid rgba(139,92,246,.4);border-radius:8px;padding:3px 10px;font-size:11px;color:#a78bfa; }
+.vk-dh     { background:rgba(59,130,246,.2);border:1px solid rgba(59,130,246,.4);border-radius:8px;padding:3px 10px;font-size:11px;color:#60a5fa; }
+.vk-vol-hi { background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.4);border-radius:8px;padding:3px 10px;font-size:11px;color:#f87171; }
+
+/* ── Confidence pills ─────────────────────────────────── */
+.vk-ch { background:rgba(16,185,129,.18);color:#34d399;border:1px solid rgba(16,185,129,.35);border-radius:999px;padding:2px 10px;font-size:11px;font-weight:600; }
+.vk-cm { background:rgba(245,158,11,.18);color:#fbbf24;border:1px solid rgba(245,158,11,.35);border-radius:999px;padding:2px 10px;font-size:11px;font-weight:600; }
+.vk-cl { background:rgba(239,68,68,.18);color:#f87171;border:1px solid rgba(239,68,68,.35);border-radius:999px;padding:2px 10px;font-size:11px;font-weight:600; }
+
+/* ── Podium ───────────────────────────────────────────── */
+.vk-pod1 { background:linear-gradient(180deg,rgba(245,158,11,.28),rgba(0,0,0,.05));border:1px solid rgba(245,158,11,.5);border-radius:16px 16px 0 0;padding:20px 16px;text-align:center;min-height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center; }
+.vk-pod2 { background:linear-gradient(180deg,rgba(107,114,128,.25),rgba(0,0,0,.05));border:1px solid rgba(107,114,128,.45);border-radius:16px 16px 0 0;padding:20px 16px;text-align:center;min-height:165px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:45px; }
+.vk-pod3 { background:linear-gradient(180deg,rgba(146,64,14,.25),rgba(0,0,0,.05));border:1px solid rgba(146,64,14,.45);border-radius:16px 16px 0 0;padding:20px 16px;text-align:center;min-height:135px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:75px; }
+.vk-pod-score { font-size:30px;font-weight:800; }
+.vk-pod-id    { font-size:13px;font-weight:700;margin:4px 0; }
+.vk-pod-title { font-size:11px;color:rgba(255,255,255,.55);margin-bottom:6px; }
+
+/* ── Section headers ─────────────────────────────────── */
+.vk-section { font-size:17px;font-weight:700;
+  background:linear-gradient(90deg,#a78bfa,#60a5fa,#34d399);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin:8px 0 14px;
+}
+
+/* ── Animated gradient text ──────────────────────────── */
+@keyframes vk-grad { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
+.vk-animated {
+  background:linear-gradient(270deg,#7c3aed,#3b82f6,#10b981,#f59e0b);
+  background-size:400% 400%;
+  animation:vk-grad 8s ease infinite;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  font-weight:800;
+}
+
+/* ── Scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:rgba(255,255,255,.02); }
+::-webkit-scrollbar-thumb { background:rgba(124,58,237,.5);border-radius:3px; }
+
+/* ── Input fields ────────────────────────────────────── */
+.stTextArea textarea,.stTextInput input {
+  background:rgba(255,255,255,.04)!important;
+  border:1px solid rgba(255,255,255,.1)!important;
+  border-radius:12px!important; color:#e2e8f0!important;
+}
+.stButton>button[kind="primary"] {
+  background:linear-gradient(135deg,#7c3aed,#3b82f6)!important;
+  border:none!important; border-radius:12px!important;
+  font-weight:700!important; letter-spacing:.3px!important;
+}
+.streamlit-expanderHeader { border-radius:12px!important; }
 </style>
 """, unsafe_allow_html=True)
 
 _provider = os.getenv("LLM_PROVIDER", "ollama").lower()
 
-st.title("🔍 VIVEKA — Discerning True Talent from Noise")
+st.markdown("""
+<div class="vk-hero">
+  <div class="vk-animated" style="font-size:28px;margin-bottom:4px">🔍 VIVEKA</div>
+  <div style="color:rgba(255,255,255,.7);font-size:15px;font-weight:500">
+    Discerning True Talent from Noise &nbsp;·&nbsp;
+    <span style="color:#a78bfa">AI-Powered Candidate Ranking</span>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
 if _provider == "gemini":
-    st.caption("Cloud Demo · Powered by Gemini · Free tier")
+    st.caption("☁️ Cloud Demo · Powered by Gemini · Free tier")
 else:
-    st.caption("Offline · Free · Private · Powered by Ollama locally")
+    st.caption("🖥️ Offline · Free · Private · Powered by Ollama locally")
 
 # ---------------------------------------------------------------------------
 # Sidebar — settings
@@ -243,12 +352,288 @@ def _conf_badge(conf: str) -> str:
     return {"high": "🟢", "medium": "🟡", "low": "🔴"}.get(str(conf).lower(), "⚪")
 
 
-def _score_color(score_100: float) -> str:
-    if score_100 >= 70:
-        return "score-high"
-    if score_100 >= 45:
-        return "score-med"
-    return "score-low"
+def _conf_pill(conf: str) -> str:
+    cls = {"high": "vk-ch", "medium": "vk-cm", "low": "vk-cl"}.get(str(conf).lower(), "vk-cm")
+    return f'<span class="{cls}">{conf.title()}</span>'
+
+
+def _rank_badge(i: int) -> str:
+    cls = {1: "vk-r1", 2: "vk-r2", 3: "vk-r3"}.get(i, "vk-rn")
+    return f'<span class="vk-rank {cls}">#{i}</span>'
+
+
+def _score_bar(pct: float, cls: str = "vk-bar-final") -> str:
+    w = max(0, min(100, pct * 100))
+    return (
+        f'<div class="vk-bar-wrap">'
+        f'<div class="vk-bar-fill {cls}" style="width:{w:.1f}%"></div>'
+        f"</div>"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Ghost Intelligence — forward-looking signals
+# ---------------------------------------------------------------------------
+
+def compute_ghost_scores(ranked: list) -> list:
+    """Enrich each candidate with ghost_score, volatility, dark_horse flag."""
+    result = []
+    for c in ranked:
+        c = dict(c)
+        composite = c.get("composite_score", 0)
+        activity  = c.get("activity_score",  0)
+        is_gem    = c.get("hidden_gem",       False)
+        stuffing  = c.get("stuffing", {}).get("stuffing_ratio", 0)
+        cal_conf  = c.get("calibrated_confidence", 0.5)
+        embed     = c.get("embedding_score",  0)
+        skill     = c.get("skill_score",      0)
+
+        # Ghost = potential-adjusted score (activity uplift + gem bonus - stuffing drag)
+        ghost = min(1.0, composite + activity * 0.12 + (0.06 if is_gem else 0) - stuffing * 0.08)
+
+        # Volatility = how uncertain is the ranking
+        volatility = round(stuffing * (1.0 - cal_conf), 4)
+
+        # Dark horse = low embedding match but strong skill coverage
+        dark_horse = embed < 0.45 and skill > 0.55
+
+        c["ghost_score"] = round(ghost, 4)
+        c["volatility"]  = volatility
+        c["dark_horse"]  = dark_horse
+        result.append(c)
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Podium — top 3 showcase
+# ---------------------------------------------------------------------------
+
+def _render_podium(ranked: list) -> None:
+    if len(ranked) < 1:
+        return
+    top3 = ranked[:3]
+
+    medals      = ["🥇", "🥈", "🥉"]
+    pod_classes = ["vk-pod1", "vk-pod2", "vk-pod3"]
+    score_cols  = ["#fbbf24", "#d1d5db", "#d97706"]
+
+    # Podium order: 2nd | 1st | 3rd
+    order = [1, 0, 2] if len(top3) == 3 else [0] if len(top3) == 1 else [1, 0]
+    cols  = st.columns(len(order))
+
+    for col_idx, rank_idx in enumerate(order):
+        if rank_idx >= len(top3):
+            continue
+        c    = top3[rank_idx]
+        cid  = c.get("candidate_id") or c.get("id") or f"#{rank_idx+1}"
+        titl = (c.get("title") or "")[:24]
+        s100 = c.get("score_100", 0)
+        gh   = c.get("ghost_score", 0)
+        gem  = "⭐ " if c.get("hidden_gem") else ""
+        dh   = "💎 " if c.get("dark_horse") else ""
+        cls  = pod_classes[rank_idx]
+        col  = score_cols[rank_idx]
+
+        cols[col_idx].markdown(
+            f'<div class="{cls}">'
+            f'<div style="font-size:38px">{medals[rank_idx]}</div>'
+            f'<div class="vk-pod-id" style="color:{col}">{gem}{dh}{cid}</div>'
+            f'<div class="vk-pod-title">{titl}</div>'
+            f'<div class="vk-pod-score" style="color:{col}">{s100:.0f}</div>'
+            f'<div style="font-size:10px;color:rgba(255,255,255,.4)">/100</div>'
+            f'<div style="margin-top:8px"><span class="vk-ghost">Ghost {gh*100:.0f}</span></div>'
+            f"</div>",
+            unsafe_allow_html=True,
+        )
+
+
+# ---------------------------------------------------------------------------
+# Ghost Intelligence analytics tab
+# ---------------------------------------------------------------------------
+
+def _show_ghost_intel(ranked: list) -> None:
+    try:
+        import plotly.graph_objects as go
+    except ImportError:
+        st.info("Install plotly for ghost intelligence charts.")
+        return
+
+    ids    = [c.get("candidate_id") or c.get("id") or f"#{i+1}" for i, c in enumerate(ranked)]
+    actual = [c.get("final_score",  0) for c in ranked]
+    ghost  = [c.get("ghost_score",  0) for c in ranked]
+    volat  = [c.get("volatility",   0) for c in ranked]
+
+    # ── Ghost vs Actual scatter ────────────────────────────────────────────────
+    marker_colors  = []
+    marker_symbols = []
+    hover_texts    = []
+    for i, c in enumerate(ranked):
+        is_gem = c.get("hidden_gem", False)
+        is_dh  = c.get("dark_horse", False)
+        marker_colors.append("#f59e0b" if is_gem else ("#a78bfa" if is_dh else "#60a5fa"))
+        marker_symbols.append("star" if is_gem else ("diamond" if is_dh else "circle"))
+        hover_texts.append(
+            f"<b>{ids[i]}</b><br>Actual: {actual[i]:.3f}<br>"
+            f"Ghost: {ghost[i]:.3f}<br>Volatility: {volat[i]:.3f}"
+        )
+
+    fig = go.Figure()
+    fig.add_shape(type="line", x0=0, y0=0, x1=1, y1=1,
+                  line=dict(color="rgba(255,255,255,0.2)", dash="dot"))
+    fig.add_annotation(x=0.75, y=0.85, text="Ghost > Actual = undervalued",
+                       showarrow=False, font=dict(color="rgba(255,255,255,0.4)", size=11))
+
+    fig.add_trace(go.Scatter(
+        x=actual, y=ghost,
+        mode="markers+text",
+        text=ids,
+        textposition="top center",
+        textfont=dict(size=10),
+        marker=dict(size=14, color=marker_colors, symbol=marker_symbols,
+                    line=dict(width=1, color="rgba(255,255,255,0.3)")),
+        hovertemplate="%{customdata}<extra></extra>",
+        customdata=hover_texts,
+        showlegend=False,
+    ))
+    fig.update_layout(
+        title="Ghost Score vs Actual Score",
+        xaxis=dict(title="Actual Final Score", range=[0, 1.05]),
+        yaxis=dict(title="Ghost Score (Future Potential)", range=[0, 1.05]),
+        template="plotly_dark", height=420,
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+    c1, c2, c3 = st.columns(3)
+    c1.markdown("🌟 **Star** = Hidden Gem")
+    c2.markdown("💎 **Diamond** = Dark Horse (low embed, high skills)")
+    c3.markdown("🔵 **Circle** = Standard candidate")
+
+    # ── Volatility bar ────────────────────────────────────────────────────────
+    st.markdown("#### Ranking Volatility — higher means less certain")
+    top_vol = sorted(zip(ids, volat), key=lambda x: x[1], reverse=True)[:12]
+    v_ids   = [x[0] for x in top_vol]
+    v_vals  = [x[1] for x in top_vol]
+    bar_col = ["#ef4444" if v > 0.3 else ("#f59e0b" if v > 0.1 else "#10b981") for v in v_vals]
+
+    fig2 = go.Figure(go.Bar(x=v_ids, y=v_vals, marker_color=bar_col,
+                             text=[f"{v:.2f}" for v in v_vals], textposition="outside"))
+    fig2.update_layout(yaxis_title="Volatility Index", xaxis_tickangle=-30,
+                       template="plotly_dark", height=320,
+                       yaxis=dict(range=[0, max(v_vals or [0.1]) * 1.3]))
+    st.plotly_chart(fig2, use_container_width=True)
+    st.caption("🔴 > 0.30: unstable ranking  |  🟡 0.10–0.30: moderate  |  🟢 < 0.10: very stable")
+
+    # ── Ghost uplift table ────────────────────────────────────────────────────
+    st.markdown("#### Ghost Uplift — candidates with highest hidden potential")
+    import pandas as pd
+    rows = []
+    for i, c in enumerate(ranked):
+        cid  = ids[i]
+        up   = c.get("ghost_score", 0) - c.get("final_score", 0)
+        rows.append({
+            "Rank":       i + 1,
+            "Candidate":  cid,
+            "Title":      (c.get("title") or "")[:22],
+            "Actual /100": f"{c.get('score_100', 0):.1f}",
+            "Ghost /100":  f"{c.get('ghost_score', 0)*100:.1f}",
+            "Uplift":      f"+{up*100:.1f}" if up > 0 else f"{up*100:.1f}",
+            "Dark Horse":  "💎" if c.get("dark_horse") else "",
+            "Hidden Gem":  "⭐" if c.get("hidden_gem") else "",
+        })
+    rows.sort(key=lambda r: float(r["Uplift"]), reverse=True)
+    st.dataframe(pd.DataFrame(rows), use_container_width=True, height=350)
+
+
+# ---------------------------------------------------------------------------
+# What-If Simulator
+# ---------------------------------------------------------------------------
+
+def _show_whatif(ranked: list, parsed_jd: dict) -> None:
+    required = parsed_jd.get("required_skills", [])
+    implied  = parsed_jd.get("implied_skills",  [])
+
+    ids = [c.get("candidate_id") or c.get("id") or f"#{i+1}" for i, c in enumerate(ranked)]
+    sel = st.selectbox("Choose a candidate to simulate", ids, key="wi_sel")
+    c   = ranked[ids.index(sel)]
+    ev  = c.get("skill_evidence", {})
+
+    miss_req  = ev.get("required_missing", [])
+    miss_impl = ev.get("implied_missing",  [])
+
+    if not miss_req and not miss_impl:
+        st.success(f"✅ {sel} already matches all required and implied skills — perfect candidate!")
+        return
+
+    st.markdown("**Hypothetically add skills and see the rank impact:**")
+
+    added_req, added_impl = [], []
+    if miss_req:
+        st.markdown("🔴 **Missing required skills**")
+        req_cols = st.columns(min(4, len(miss_req)))
+        for i, skill in enumerate(miss_req):
+            if req_cols[i % len(req_cols)].checkbox(skill, key=f"wi_r_{sel}_{skill}"):
+                added_req.append(skill)
+
+    if miss_impl:
+        st.markdown("🟡 **Missing implied skills**")
+        imp_cols = st.columns(min(4, len(miss_impl)))
+        for i, skill in enumerate(miss_impl):
+            if imp_cols[i % len(imp_cols)].checkbox(skill, key=f"wi_i_{sel}_{skill}"):
+                added_impl.append(skill)
+
+    if added_req or added_impl:
+        old_req_hit  = len(ev.get("required_matched", []))
+        old_impl_hit = len(ev.get("implied_matched",  []))
+        new_req_hit  = old_req_hit  + len(added_req)
+        new_impl_hit = old_impl_hit + len(added_impl)
+
+        max_score    = len(required) * 1.0 + len(implied) * 0.5 or 1.0
+        old_raw      = (old_req_hit * 1.0 + old_impl_hit * 0.5) / max_score
+        new_raw      = (new_req_hit * 1.0 + new_impl_hit * 0.5) / max_score
+
+        stuffing     = c.get("stuffing", {}).get("stuffing_ratio", 0)
+        try:
+            from config import STUFFING_PENALTY
+        except ImportError:
+            STUFFING_PENALTY = 0.3
+
+        old_skill = old_raw * (1 - stuffing * STUFFING_PENALTY)
+        new_skill = new_raw * (1 - stuffing * STUFFING_PENALTY)
+        delta_skill = new_skill - old_skill
+
+        try:
+            from config import get_weights
+            _, w_skill, _, _ = get_weights()
+        except ImportError:
+            w_skill = 0.4
+
+        comp_delta = delta_skill * w_skill
+
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric("Current Skill Score",    f"{old_skill:.0%}")
+        col2.metric("New Skill Score",        f"{new_skill:.0%}",  f"+{delta_skill:.0%}")
+        col3.metric("Composite Impact",       f"+{comp_delta:.3f}")
+
+        # Hypothetical rank
+        hypo = [(c2.get("composite_score", 0), ids[j])
+                for j, c2 in enumerate(ranked) if ids[j] != sel]
+        hypo.append((c.get("composite_score", 0) + comp_delta, sel))
+        hypo.sort(reverse=True)
+        new_rank = next(j for j, (_, cid) in enumerate(hypo, 1) if cid == sel)
+        old_rank = ids.index(sel) + 1
+        rank_delta = old_rank - new_rank
+
+        col4.metric(
+            "Hypothetical Rank",
+            f"#{new_rank}",
+            (f"↑ {rank_delta} places" if rank_delta > 0
+             else ("No change" if rank_delta == 0 else f"↓ {abs(rank_delta)} places")),
+        )
+
+        st.info(
+            f"Adding **{', '.join(added_req + added_impl)}** would move "
+            f"**{sel}** from rank #{old_rank} → #{new_rank}"
+        )
 
 
 def _render_candidate_card(i: int, c: dict, expanded: bool = False, render_id: int = 0) -> None:
@@ -257,74 +642,100 @@ def _render_candidate_card(i: int, c: dict, expanded: bool = False, render_id: i
     s100   = c.get("score_100", 0.0)
     llm    = c.get("llm_score",  "…")
     conf   = str(c.get("confidence", "…"))
-    cal_c  = c.get("calibrated_confidence")
+    cal_c  = c.get("calibrated_confidence", 0.5)
     reason = c.get("reason", "Scoring in progress…")
     is_gem = c.get("hidden_gem", False)
-    ev     = c.get("skill_evidence", {})
+    is_dh  = c.get("dark_horse", False)
+    ghost  = c.get("ghost_score", 0.0)
+    volat  = c.get("volatility",  0.0)
+    ev       = c.get("skill_evidence", {})
     stuffing = c.get("stuffing", {})
     cf       = c.get("counterfactual", {})
 
-    gem_badge = "  ★ Hidden Gem" if is_gem else ""
-    label = f"**#{i}  {cid}**  |  {title}{gem_badge}  |  Score: **{s100:.1f}/100**"
+    badges = ""
+    if is_gem:
+        badges += ' <span class="vk-gem">⭐ Hidden Gem</span>'
+    if is_dh:
+        badges += ' <span class="vk-dh">💎 Dark Horse</span>'
+    if volat > 0.3:
+        badges += ' <span class="vk-vol-hi">⚡ Volatile</span>'
+
+    label = (
+        f"{_rank_badge(i)} &nbsp; **{cid}** &nbsp;·&nbsp; {title}"
+        f"{badges} &nbsp;·&nbsp; Score: **{s100:.1f}/100**"
+    )
 
     with st.expander(label, expanded=expanded):
-        col1, col2, col3, col4, col5 = st.columns(5)
-        col1.metric("Score /100",  f"{s100:.1f}")
-        col2.metric("LLM Score",   f"{llm}/10" if isinstance(llm, int) else str(llm))
-        col3.metric("Confidence",  f"{_conf_badge(conf)} {conf.title()}")
-        col4.metric("Skill Match", f"{c.get('skill_score', 0):.0%}")
-        col5.metric("Seniority",   f"{c.get('seniority_score', 0):.0%}")
+        # ── Score bar strip ────────────────────────────────────────────────
+        st.markdown(
+            f"<div style='display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-bottom:10px'>"
+            # Final score
+            f"<div><div style='font-size:11px;color:rgba(255,255,255,.5)'>Final Score</div>"
+            f"<div style='font-size:22px;font-weight:800;color:#a78bfa'>{s100:.0f}<span style='font-size:13px;color:rgba(255,255,255,.4)'>/100</span></div>"
+            f"{_score_bar(s100/100,'vk-bar-final')}</div>"
+            # Skill
+            f"<div><div style='font-size:11px;color:rgba(255,255,255,.5)'>Skill Match</div>"
+            f"<div style='font-size:22px;font-weight:800;color:#34d399'>{c.get('skill_score',0):.0%}</div>"
+            f"{_score_bar(c.get('skill_score',0),'vk-bar-skill')}</div>"
+            # Embedding
+            f"<div><div style='font-size:11px;color:rgba(255,255,255,.5)'>Semantic</div>"
+            f"<div style='font-size:22px;font-weight:800;color:#60a5fa'>{c.get('embedding_score',0):.0%}</div>"
+            f"{_score_bar(c.get('embedding_score',0),'vk-bar-embed')}</div>"
+            # Ghost
+            f"<div><div style='font-size:11px;color:rgba(255,255,255,.5)'>Ghost Score</div>"
+            f"<div style='font-size:22px;font-weight:800;color:#c084fc'>{ghost*100:.0f}<span style='font-size:13px;color:rgba(255,255,255,.4)'>/100</span></div>"
+            f"{_score_bar(ghost,'vk-bar-ghost')}</div>"
+            f"</div>",
+            unsafe_allow_html=True,
+        )
 
-        # Calibrated confidence bar
-        if cal_c is not None:
-            cal_pct = int(cal_c * 100)
-            bar_color = "#4caf50" if cal_pct >= 70 else ("#ff9800" if cal_pct >= 45 else "#f44336")
-            st.markdown(
-                f"**Calibrated Confidence:** "
-                f"<span style='color:{bar_color};font-weight:bold'>{cal_pct}%</span>  "
-                f"<progress value='{cal_pct}' max='100' style='width:160px'></progress>",
-                unsafe_allow_html=True,
-            )
+        # ── Second row: LLM score, confidence, seniority, cal.conf ────────
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric("LLM Score",   f"{llm}/10" if isinstance(llm, int) else str(llm))
+        col2.metric("Seniority",   f"{c.get('seniority_score',0):.0%}")
+        col3.metric("Activity",    f"{c.get('activity_score',0):.0%}")
+        col4.metric("Cal. Conf",   f"{cal_c:.0%}")
 
-        st.markdown(f"**Reason:** {reason}")
+        # Confidence pill + reason
+        st.markdown(
+            f"{_conf_pill(conf)} &nbsp; {reason}",
+            unsafe_allow_html=True,
+        )
 
-        # Citation evidence
+        # ── Citation evidence ──────────────────────────────────────────────
         ev_verified    = c.get("evidence_verified",    [])
         ev_unsupported = c.get("evidence_unsupported", [])
         if ev_verified or ev_unsupported:
             with st.expander("📎 Citation Evidence"):
-                if ev_verified:
-                    for snippet in ev_verified:
-                        st.success(f'✅ **Verified:** "{snippet}"')
-                if ev_unsupported:
-                    for snippet in ev_unsupported:
-                        st.error(f'⚠️ **Not found in profile:** "{snippet}"')
+                for snippet in ev_verified:
+                    st.success(f'✅ **Verified:** "{snippet}"')
+                for snippet in ev_unsupported:
+                    st.error(f'⚠️ **Not found in profile:** "{snippet}"')
 
         if c.get("analysis"):
             with st.expander("🧠 Chain-of-thought reasoning"):
                 st.markdown(c["analysis"])
 
+        # ── Skill evidence ─────────────────────────────────────────────────
         ev_hit  = ev.get("required_matched", [])
         ev_miss = ev.get("required_missing", [])
         if ev_hit or ev_miss:
             h_col, m_col = st.columns(2)
-            h_col.markdown("✅ **Skills matched:** " + (", ".join(ev_hit) or "none"))
-            m_col.markdown("❌ **Skills missing:** " + (", ".join(ev_miss) or "none"))
+            h_col.markdown("✅ **Matched:** " + (", ".join(ev_hit) or "none"))
+            m_col.markdown("❌ **Missing:** " + (", ".join(ev_miss) or "none"))
 
-        # Keyword-stuffing alert
         if stuffing and stuffing.get("stuffing_ratio", 0) > 0.2:
-            unsup = stuffing.get("claimed_unsupported", [])
             ratio = stuffing.get("stuffing_ratio", 0)
+            unsup = stuffing.get("claimed_unsupported", [])
             st.warning(
-                f"⚠️ **Résumé stuffing detected** ({ratio:.0%} of listed skills have no narrative support): "
+                f"⚠️ **Résumé stuffing {ratio:.0%}** — claims with no narrative support: "
                 + ", ".join(unsup[:5])
             )
 
-        # Counterfactual / ceiling
         if cf and cf.get("ceiling"):
             st.info(f"🔮 **Why not higher?** {cf['ceiling']}")
 
-        # Radar chart
+        # ── Radar chart ────────────────────────────────────────────────────
         try:
             import plotly.graph_objects as go
             r_vals = [
@@ -333,22 +744,27 @@ def _render_candidate_card(i: int, c: dict, expanded: bool = False, render_id: i
                 c.get("seniority_score",  0),
                 c.get("activity_score",   0),
                 (c.get("llm_score", 0) or 0) / 10.0,
-                c.get("calibrated_confidence", 0),
+                cal_c,
+                ghost,
             ]
-            theta = ["Semantic", "Skills", "Seniority", "Activity", "LLM Fit", "Cal.Conf"]
+            theta = ["Semantic", "Skills", "Seniority", "Activity", "LLM Fit", "Cal.Conf", "Ghost"]
             fig = go.Figure(go.Scatterpolar(
                 r=r_vals + [r_vals[0]],
                 theta=theta + [theta[0]],
                 fill="toself",
-                fillcolor="rgba(78,154,241,0.2)",
-                line=dict(color="#4e9af1"),
+                fillcolor="rgba(124,58,237,0.18)",
+                line=dict(color="#a78bfa", width=2),
             ))
             fig.update_layout(
-                polar=dict(radialaxis=dict(range=[0, 1], showticklabels=False)),
+                polar=dict(radialaxis=dict(range=[0, 1], showticklabels=False,
+                                           gridcolor="rgba(255,255,255,0.08)"),
+                           angularaxis=dict(color="rgba(255,255,255,0.5)")),
                 showlegend=False,
                 height=260,
                 margin=dict(l=30, r=30, t=30, b=30),
                 template="plotly_dark",
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)",
             )
             st.plotly_chart(fig, use_container_width=True, key=f"radar_{render_id}_{i}_{cid[:8]}")
         except ImportError:
@@ -356,9 +772,20 @@ def _render_candidate_card(i: int, c: dict, expanded: bool = False, render_id: i
 
 
 def _render_shortlist(ranked: list, top_n: int = 20, render_id: int = 0) -> None:
-    gems = [c for c in ranked if c.get("hidden_gem")]
-    if gems:
-        st.success(f"★ {len(gems)} Hidden Gem(s) surfaced so far")
+    gems    = [c for c in ranked if c.get("hidden_gem")]
+    dh_list = [c for c in ranked if c.get("dark_horse")]
+    if gems or dh_list:
+        msg = []
+        if gems:
+            msg.append(f"⭐ {len(gems)} Hidden Gem(s)")
+        if dh_list:
+            msg.append(f"💎 {len(dh_list)} Dark Horse(s)")
+        st.success("  ·  ".join(msg) + " surfaced")
+
+    if len(ranked) >= 2 and render_id == 0:
+        _render_podium(ranked)
+        st.markdown("---")
+
     for i, c in enumerate(ranked[:top_n], 1):
         _render_candidate_card(i, c, expanded=(i <= 3), render_id=render_id)
 
@@ -764,20 +1191,43 @@ if run_btn:
         eta_ph.caption(eta_text)
 
         with results_ph.container():
-            _render_shortlist(ranked_sorted, top_n=20, render_id=i)
+            _render_shortlist(ranked_sorted, top_n=20, render_id=i if i < total else 0)
 
     t_total = time.time() - t0
     progress.progress(1.0, text=f"✅ Done in {t_total:.0f}s  —  {len(ranked_sorted)} candidates ranked")
     eta_ph.empty()
 
+    # Enrich with ghost scores + volatility + dark horse flags
+    ranked_sorted = compute_ghost_scores(ranked_sorted)
+
+    # ── Summary stat cards ─────────────────────────────────────────────────────
+    n_gems  = sum(1 for c in ranked_sorted if c.get("hidden_gem"))
+    n_dh    = sum(1 for c in ranked_sorted if c.get("dark_horse"))
+    top_g   = ranked_sorted[0].get("ghost_score", 0) if ranked_sorted else 0
+    avg_vol = sum(c.get("volatility", 0) for c in ranked_sorted) / max(len(ranked_sorted), 1)
+
+    sc1, sc2, sc3, sc4, sc5 = st.columns(5)
+    sc1.markdown(f'<div class="vk-stat"><div class="vk-stat-n vk-purple">{len(ranked_sorted)}</div><div class="vk-stat-l">Ranked</div></div>', unsafe_allow_html=True)
+    sc2.markdown(f'<div class="vk-stat"><div class="vk-stat-n vk-gold">{n_gems}</div><div class="vk-stat-l">Hidden Gems</div></div>', unsafe_allow_html=True)
+    sc3.markdown(f'<div class="vk-stat"><div class="vk-stat-n vk-blue">{n_dh}</div><div class="vk-stat-l">Dark Horses</div></div>', unsafe_allow_html=True)
+    sc4.markdown(f'<div class="vk-stat"><div class="vk-stat-n vk-purple">{top_g*100:.0f}</div><div class="vk-stat-l">Top Ghost /100</div></div>', unsafe_allow_html=True)
+    sc5.markdown(f'<div class="vk-stat"><div class="vk-stat-n vk-green">{avg_vol:.2f}</div><div class="vk-stat-l">Avg Volatility</div></div>', unsafe_allow_html=True)
+
     # ── Analytics ─────────────────────────────────────────────────────────────
     st.divider()
     st.subheader("📊 Analytics")
 
-    tab_breakdown, tab_trend, tab_gap, tab_compare, tab_stuffing, tab_cite = st.tabs([
+    tab_ghost, tab_whatif, tab_breakdown, tab_trend, tab_gap, tab_compare, tab_stuffing, tab_cite = st.tabs([
+        "👻 Ghost Intel", "🔮 What-If",
         "Score Breakdown", "Score Trend", "Skill Gap", "Compare",
         "Stuffing Detector", "Citation Audit",
     ])
+    with tab_ghost:
+        st.caption("Forward-looking signals: ghost scores, volatility, dark horses, and hidden uplift potential.")
+        _show_ghost_intel(ranked_sorted)
+    with tab_whatif:
+        st.caption("Add missing skills to any candidate and see the hypothetical rank change — instantly.")
+        _show_whatif(ranked_sorted, parsed_jd)
     with tab_breakdown:
         st.caption("How each signal (embedding, skill, seniority, activity) contributed for the top 10.")
         _show_score_breakdown(ranked_sorted)
