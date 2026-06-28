@@ -31,6 +31,8 @@ import json
 from pathlib import Path
 from typing import List, Dict
 
+import pandas as pd
+
 from config import ID_FIELDS
 
 try:
@@ -262,6 +264,59 @@ def _print_summary_plain(ranked: List[Dict], top_n: int) -> None:
         for c in gems:
             print(f"    [{_get_id(c)}] {c.get('title', '')} — {c.get('reason', '')[:60]}")
     print(f"{'='*70}\n")
+
+
+def write_xlsx(
+    ranked: List[Dict],
+    out_dir: str | Path = "data",
+    stem: str = "ranked_output",
+) -> Path:
+    """Write ranked shortlist to a formatted Excel (.xlsx) file."""
+    out_dir  = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    xlsx_path = out_dir / f"{stem}.xlsx"
+
+    rows = [_to_row(rank, c) for rank, c in enumerate(ranked, start=1)]
+    df   = pd.DataFrame(rows, columns=CSV_COLUMNS)
+
+    with pd.ExcelWriter(xlsx_path, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Rankings")
+        ws = writer.sheets["Rankings"]
+
+        # Column widths
+        col_widths = {
+            "rank": 6, "candidate_id": 18, "final_score": 12,
+            "llm_score": 10, "confidence": 12, "hidden_gem": 12,
+            "reason": 60, "evidence": 50, "skill_score": 12,
+            "seniority_score": 16, "activity_score": 14,
+            "composite_score": 16, "embedding_score": 16,
+        }
+        for col_idx, col_name in enumerate(CSV_COLUMNS, start=1):
+            ws.column_dimensions[
+                ws.cell(1, col_idx).column_letter
+            ].width = col_widths.get(col_name, 14)
+
+        # Header styling
+        from openpyxl.styles import Font, PatternFill, Alignment
+        header_fill = PatternFill("solid", fgColor="4F46E5")
+        header_font = Font(bold=True, color="FFFFFF", size=11)
+        for cell in ws[1]:
+            cell.fill      = header_fill
+            cell.font      = header_font
+            cell.alignment = Alignment(horizontal="center", vertical="center")
+
+        # Highlight hidden gems in gold
+        gold_fill = PatternFill("solid", fgColor="FCD34D")
+        gem_col   = CSV_COLUMNS.index("hidden_gem") + 1
+        for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
+            if row[gem_col - 1].value == "yes":
+                for cell in row:
+                    cell.fill = gold_fill
+
+        ws.freeze_panes = "A2"
+
+    print(f"[output] Wrote Excel     -> {xlsx_path}")
+    return xlsx_path
 
 
 def normalize_scores(ranked: List[Dict]) -> List[Dict]:

@@ -23,10 +23,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from gradio_app import demo  # noqa: E402
+from gradio_app import demo, _THEME, CSS  # noqa: E402
 
 if __name__ == "__main__":
     demo.launch(
         server_name="0.0.0.0",   # needed inside Docker
         server_port=int(os.environ.get("PORT", 7860)),
+        theme=_THEME,
+        css=CSS,
     )

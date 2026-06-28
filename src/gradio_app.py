@@ -605,15 +605,15 @@ else:
 EMPTY = '<div class="empty-state">Paste a job description and click <b>▶ Run VIVEKA</b> to rank candidates.</div>'
 
 
+_THEME = gr.themes.Base(
+    primary_hue="purple",
+    secondary_hue="blue",
+    neutral_hue="slate",
+    font=gr.themes.GoogleFont("Inter"),
+)
+
 with gr.Blocks(
-    css=CSS,
     title="VIVEKA — Intelligent Candidate Ranking",
-    theme=gr.themes.Base(
-        primary_hue="purple",
-        secondary_hue="blue",
-        neutral_hue="slate",
-        font=gr.themes.GoogleFont("Inter"),
-    ),
 ) as demo:
 
     gr.HTML(HERO)
@@ -653,6 +653,7 @@ with gr.Blocks(
 
             gr.Markdown("---")
             gr.Markdown("### ⬇️ Download Results")
+            xlsx_dl = gr.File(label="ranked_output.xlsx", visible=False)
             csv_dl  = gr.File(label="ranked_output.csv",  visible=False)
             json_dl = gr.File(label="ranked_output.json", visible=False)
 
@@ -707,17 +708,26 @@ with gr.Blocks(
     # ── After pipeline: update charts + what-if dropdowns ────────────────────
     def _post_run(jstr: str, jd_text: str):
         if not jstr:
-            return None, None, None, gr.update(choices=[]), gr.update(choices=[]), []
+            return None, None, None, gr.update(visible=False), gr.update(choices=[]), gr.update(choices=[]), []
 
         ranked = json.loads(jstr)
 
-        # Parse JD for what-if
         ids = [c.get("candidate_id") or c.get("id") or f"#{i+1}" for i, c in enumerate(ranked)]
+
+        xlsx_path = None
+        try:
+            import tempfile
+            from output import write_xlsx
+            tmp = Path(tempfile.mkdtemp())
+            xlsx_path = str(write_xlsx(ranked, out_dir=tmp))
+        except Exception:
+            pass
 
         return (
             ghost_chart(jstr),
             volatility_chart(jstr),
             score_breakdown_chart(jstr),
+            gr.update(value=xlsx_path, visible=xlsx_path is not None),
             gr.update(choices=ids, value=ids[0] if ids else None),
             gr.update(choices=[]),
             ranked,
@@ -726,7 +736,7 @@ with gr.Blocks(
     run_btn.click(
         fn=_post_run,
         inputs=[json_state, jd_input],
-        outputs=[ghost_plot, volat_plot, breakdown_plot, wi_cand, wi_skills, ranked_state],
+        outputs=[ghost_plot, volat_plot, breakdown_plot, xlsx_dl, wi_cand, wi_skills, ranked_state],
     )
 
     # ── What-If: update skill checkboxes when candidate changes ───────────────
@@ -830,4 +840,4 @@ with gr.Blocks(
 demo.queue()
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(theme=_THEME, css=CSS)
