@@ -63,11 +63,20 @@ def get_llm(json_mode: bool = False):
             return ChatGoogleGenerativeAI(model=model, temperature=0, google_api_key=api_key)
 
     if provider == "huggingface":
-        # Uses huggingface_hub.InferenceClient — no transformers/langchain-huggingface needed.
-        # HF_TOKEN is auto-injected by HF Spaces; works without a token on public models.
+        token = (
+            os.getenv("HF_TOKEN") or
+            os.getenv("HUGGINGFACE_TOKEN") or
+            os.getenv("HUGGINGFACE_API_TOKEN") or
+            _hf_cached_token()
+        )
+        if not token:
+            raise EnvironmentError(
+                "HF_TOKEN not set. In HF Spaces: Settings → Variables and secrets → "
+                "Add secret HF_TOKEN = your Hugging Face API token."
+            )
         return _HFInferenceChat(
             model_id=os.getenv("VIVEKA_MODEL", DEFAULT_HF_MODEL),
-            hf_token=os.getenv("HF_TOKEN") or os.getenv("HUGGINGFACE_API_TOKEN", ""),
+            hf_token=token,
         )
 
     raise ValueError(
@@ -79,6 +88,14 @@ def get_llm(json_mode: bool = False):
 # Minimal LangChain-compatible chat model backed by HF Inference API
 # Avoids langchain-huggingface (and its transformers dep) entirely.
 # ---------------------------------------------------------------------------
+
+def _hf_cached_token() -> str:
+    """Return cached HF token from huggingface_hub login, or ''."""
+    try:
+        from huggingface_hub import get_token
+        return get_token() or ""
+    except Exception:
+        return ""
 
 from langchain_core.language_models.chat_models import BaseChatModel  # noqa: E402
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage  # noqa: E402
@@ -94,7 +111,8 @@ class _HFInferenceChat(BaseChatModel):
 
     def _generate(self, messages, stop=None, run_manager=None, **kwargs):
         from huggingface_hub import InferenceClient
-        client = InferenceClient(token=self.hf_token or None)
+        token = self.hf_token or _hf_cached_token() or None
+        client = InferenceClient(token=token)
 
         hf_msgs = []
         for m in messages:
